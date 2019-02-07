@@ -55,12 +55,13 @@ function handle(request, response) {
     let url = request.url.toLowerCase();
     if (url.endsWith("/")) url = url + "index.html";
     if (isBanned(url)) return fail(response, NotFound, "URL has been banned");
-    let type = findType(url);
+    let type = findType(url, request);
     if (type == null) return fail(response, BadType, "File type unsupported");
     let file = "./public" + url;
     fs.readFile(file, ready);
     function ready(err, content) { deliver(response, type, err, content); }
 }
+
 
 // Forbid any resources which shouldn't be delivered to the browser.
 function isBanned(url) {
@@ -72,9 +73,17 @@ function isBanned(url) {
 }
 
 // Find the content type to respond with, or undefined.
-function findType(url) {
+// Do content negotiation too.
+function findType(url, request) {
     let dot = url.lastIndexOf(".");
     let extension = url.substring(dot + 1);
+    // Try to push xhtml if the browser accepts it.
+    if (extension === "html"){
+      let accepted = request.headers.accept.split(",")
+      if(accepted.indexOf(types["xhtml"]) > -1){
+        return types["xhtml"];
+      }
+    }
     return types[extension];
 }
 
@@ -126,7 +135,7 @@ function banUpperCase(root, folder) {
 // complete list, install the mime module and adapt the list it provides.
 function defineTypes() {
     let types = {
-        html : "application/xhtml+xml",
+        html : "text/html",
         css  : "text/css",
         js   : "application/javascript",
         mjs  : "application/javascript", // for ES6 modules
@@ -145,7 +154,7 @@ function defineTypes() {
         mp4  : "video/mp4",
         webm : "video/webm",
         ico  : "image/x-icon", // just for favicon.ico
-        xhtml: undefined,      // non-standard, use .html
+        xhtml: "application/xhtml+xml",      // non-standard, use .html
         htm  : undefined,      // non-standard, use .html
         rar  : undefined,      // non-standard, platform dependent, use .zip
         doc  : undefined,      // non-standard, platform dependent, use .pdf
