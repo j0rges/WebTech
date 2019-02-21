@@ -23,6 +23,7 @@ header a:hover {
 }
 input.search {
   width:50%;
+  max-width: 440px;
   padding: 5px 0 5px 0;
   font-size: 1.2em;
   text-indent: 1em;
@@ -32,10 +33,10 @@ input.search {
   outline: none;
   background-color: rgba(255, 255, 255, 0.8);
  }
+h1 { color: white; font-size: 3em; }
 .center {
   position: absolute;
-  left: 0;
-  top: 50%;
+  top: 25%;
   width: 100%;
   text-align: center;
 }
