@@ -6,21 +6,6 @@ body {
   background-size: auto;
 }
 
-header {
-  overflow: hidden;
-  background-color: #36494E;
-}
-header a {
-  float: left;
-  display: block;
-  color: rgb(200, 200, 200);
-  text-align: center;
-  padding: 1em 2em;
-  text-decoration: none;
-}
-header a:hover {
-  background-color: #26393E;
-}
 input.search {
   width:50%;
   max-width: 440px;
