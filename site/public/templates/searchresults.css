@@ -4,11 +4,11 @@
 
 body {
   background-color: #C5DCA0;
-  min-width: 600px;
+  min-width: 500px;
 }
 .column {
   float: left;
-  padding: 10px;
+  padding: 5px;
 }
 .column.side {
   width: 25%;
@@ -20,4 +20,28 @@ body {
   content: "";
   display: table;
   clear: both;
+}
+
+.search-result {
+  display: block;
+  background-color: #48A9A6;
+  margin: 5px;
+  padding: 5px;
+  border-radius: 5px;
+}
+.blog-content {
+  display: block;
+  margin: 5px;
+
+}
+h6,h5 {margin: 0px}
+h6 {
+  font-weight: lighter;
+  font-size: 1em;
+}
+h5 {font-size: 1.2em; padding-left: 10px;}
+hr {
+  border-color: #288986;
+  border-style:solid;
+  margin: 1px;
 }

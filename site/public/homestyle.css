@@ -4,6 +4,7 @@ body {
   background-position: 50% 40%;
   background-repeat: no-repeat;
   background-size: auto;
+  min-width: 400px;
 }
 
 input.search {
