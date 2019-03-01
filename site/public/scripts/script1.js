@@ -34,5 +34,9 @@ function appendSearchResult(postData, template){
     var element = result.querySelector(ids[i]);
     element.innerHTML = postData[i];
   }
-  document.querySelector("#results-area").appendChild(result);
+  var resultArea = document.querySelector("#results-area");
+  resultArea.appendChild(result);
+  var newresult = result.cloneNode(true);
+  newresult.querySelector("#username").innerHTML = "not Jorge! ";
+  resultArea.appendChild(newresult);
 }
