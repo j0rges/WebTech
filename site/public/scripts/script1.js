@@ -1,9 +1,16 @@
 "use strict"
+
+addEventListener('load',start);
+start(){
+  loadPost(["Jorge S-C ","Go to el retiro","madrid is great!"]);
+}
+
 function changeUsername(username){
   var element = document.getElementById("username");
   element.innerHTML = username;
 }
 
+/*
 function loadPost(postData){
   var ids = ["username","title","content-text"];
   var element;
@@ -12,7 +19,10 @@ function loadPost(postData){
     element.innerHTML = postData[i];
   }
 }
+*/
 
-window.onload = function() {
-  loadPost(["Jorge S-C ","Go to el retiro","madrid is great!"]);
+function appendSearchResult(postData){
+  // Create the section and
+  var result = document.createElement("section");
+  result.setAttribute("class","search-result")
 }
