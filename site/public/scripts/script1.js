@@ -10,7 +10,7 @@ function loadPosts(){
   // Get the template from the server.
   var req = new XMLHttpRequest();
   req.onreadystatechange = receive;
-  req.open("Get","resultTemplate.html",true);
+  req.open("Get","resulttemplate.html",true);
   req.send();
   function receive(){
     if (this.readyState != XMLHttpRequest.DONE) return;
@@ -32,7 +32,6 @@ function appendSearchResult(postData, template){
   var ids = ["#username","#title","#content-text"];
   for(var i = 0; i < ids.length; i++){
     var element = result.querySelector(ids[i]);
-    console.log(element);
     element.innerHTML = postData[i];
   }
   document.querySelector("#results-area").appendChild(result);
