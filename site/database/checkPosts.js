@@ -6,9 +6,7 @@ logPosts();
 async function logPosts() {
   try {
     db = await sqlite.open("./db.sqlite");
-    var as = await db.all("select * from posts " +
-                          "join destinations using (locationID) " +
-                          "join profiles using (username)");
-    console.log(as);
+    var as = GetPostsWithDestinationAndUsernames();
+    console.log(as); // Access them by console.log(as[0].username);
   } catch (e) { console.log(e); }
 }
