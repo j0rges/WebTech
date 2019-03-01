@@ -1,19 +1,42 @@
 "use strict"
-function changeUsername(username){
-  var element = document.getElementById("username");
-  element.innerHTML = username;
+
+addEventListener('load',loadPosts);
+
+
+
+function loadPosts(){
+  // substitute for getting the actual data from the server/database.
+  var postData = ["Jorge S-C ","Go to el retiro","madrid is great!"];
+  // Get the template from the server.
+  var req = new XMLHttpRequest();
+  req.onreadystatechange = receive;
+  req.open("Get","resulttemplate.html",true);
+  req.send();
+  function receive(){
+    if (this.readyState != XMLHttpRequest.DONE) return;
+    var template = this.responseText;
+    appendSearchResult(postData, template);
+  }
+
 }
 
-function loadPost(postData){
-  var ids = ["username","title","content-text"];
-  //var data = //write querry here.
-  var element;
+// Given the data and the template append the corresponding post to the
+// search result area.
+function appendSearchResult(postData, template){
+  // Create the section and give it the appropiate class.
+  var result = document.createElement("section");
+  result.setAttribute("class", "search-result")
+  // put the template inside.
+  result.innerHTML = template;
+  // Load the post into the template.
+  var ids = ["#username","#title","#content-text"];
   for(var i = 0; i < ids.length; i++){
-    var element = document.getElementById(ids[i]);
+    var element = result.querySelector(ids[i]);
     element.innerHTML = postData[i];
   }
-}
-
-window.onload = function() {
-  loadPost(["Jorge S-C ","Go to el retiro","madrid is great!"]);
+  var resultArea = document.querySelector("#results-area");
+  resultArea.appendChild(result);
+  var newresult = result.cloneNode(true);
+  newresult.querySelector("#username").innerHTML = "not Jorge! ";
+  resultArea.appendChild(newresult);
 }
