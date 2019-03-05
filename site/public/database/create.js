@@ -24,9 +24,3 @@ async function create() {
         await db.run("insert into posts values (2,3,'JorgeSc','An afternoon in Madrid','I recommend going to the Retiro to have a nice afternoon outside.')");
     } catch (e) { console.log(e); }
 }
-
-function GetPostsWithDestinationAndUsernames(){
-  return await db.all("select * from posts " +
-                        "join destinations using (locationID) " +
-                        "join profiles using (username)");
-}

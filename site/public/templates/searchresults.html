@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta name="keywords" content="travelling, advice"/>
   <script src="../scripts/script1.js"></script>
-  <script src="../scripts/button.js"></script>
+  <script src="../scripts/dbqueries.js"></script>
 </head>
 
 <body>
@@ -20,24 +20,35 @@
         <button type="button" name="button" id="myButton">Click here to repeat a result!</button>
     </section>
     <section id="results-area" class="column middle">
-      <h1 style="text-indent: 5px">Madrid</h1>
+      <h1 style="text-indent: 5px"><p id="destination">Destination</p></h1>
       <section class="search-result">
-        <h6>User <var id="username">anonymous </var>recommended:</h6>
+        <h6>User <var id="username">Username</var> recommended:</h6>
         <hr/>
-        <h5 id="title">Go to El Retiro</h5>
+        <h5 id="title">title</h5>
         <section class="blog-content row">
           <div class="column side" id="image">
             <img src="../images/alev-takil.png" alt="La casa de cristal." style="width:100%"/>
           </div>
           <div class="column middle">
-            <p id="content-text">El Retiro is a beautiful place to spend an afternoon.
-            This park has a lot of activities to explore. You can rent a boat to go
-            in the lake there, have a walk around the extensive grounds or visit the
-            free art exhibition which can be found inside the impressive Casa de Cristal.</p>
+            <p id="content">Content</p>
           </div>
         </section>
       </section>
     </section>
   </section>
+  <script>
+    var destination = 'Madrid';
+
+    var username = GetPostsByDestination(destination);
+    // var title = 'Go to El Retiro';
+    // var content = 'El Retiro is a beautiful place to spend an afternoon.\
+    // This park has a lot of activities to explore. You can rent a boat to go\
+    // in the lake there, have a walk around the extensive grounds or visit the\
+    // free art exhibition which can be found inside the impressive Casa de Cristal.'
+    document.getElementById("destination").innerHTML = destination;
+    document.getElementById("username").innerHTML = username;
+    document.getElementById("title").innerHTML = title;
+    document.getElementById("content").innerHTML = content;
+  </script>
 </body>
 </html>

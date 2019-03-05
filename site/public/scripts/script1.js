@@ -2,10 +2,8 @@
 
 addEventListener('load',loadPosts);
 
-
-
 function loadPosts(){
-  // substitute for getting the actual data from the server/database.
+  // Substitute for getting the actual data from the server/database.
   var postData = ["Jorge S-C ","Go to el retiro","madrid is great!"];
   // Get the template from the server.
   var req = new XMLHttpRequest();
@@ -17,7 +15,6 @@ function loadPosts(){
     var template = this.responseText;
     appendSearchResult(postData, template);
   }
-
 }
 
 // Given the data and the template append the corresponding post to the

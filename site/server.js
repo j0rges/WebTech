@@ -25,6 +25,7 @@ let http = require("http");
 let fs = require("fs");
 let OK = 200, NotFound = 404, BadType = 415, Error = 500;
 let types, banned;
+
 start();
 
 // Start the http service. Accept only requests from localhost, for security.
