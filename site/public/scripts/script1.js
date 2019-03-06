@@ -37,3 +37,22 @@ function appendSearchResult(postData, template){
   newresult.querySelector("#username").innerHTML = "not Jorge! ";
   resultArea.appendChild(newresult);
 }
+
+/*
+
+<script>
+  var destination = 'Madrid';
+
+  var username = GetPostsByDestination(destination);
+  // var title = 'Go to El Retiro';
+  // var content = 'El Retiro is a beautiful place to spend an afternoon.\
+  // This park has a lot of activities to explore. You can rent a boat to go\
+  // in the lake there, have a walk around the extensive grounds or visit the\
+  // free art exhibition which can be found inside the impressive Casa de Cristal.'
+  document.getElementById("destination").innerHTML = destination;
+  document.getElementById("username").innerHTML = username;
+  document.getElementById("title").innerHTML = title;
+  document.getElementById("content").innerHTML = content;
+</script>
+
+*/
