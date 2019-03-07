@@ -2,6 +2,8 @@
 
 addEventListener('load',script1start);
 
+var postTemplate;
+
 function script1start(){
   initButton();
   loadPosts();
@@ -9,7 +11,10 @@ function script1start(){
 
 function initButton() {
   const b = document.querySelector("#myButton");
-  b.addEventListener("click",loadPosts);
+  b.addEventListener("click",c);
+  function c(){
+    appendSearchResult(["Jorge S-C ","Go to el retiro","madrid is great!"],postTemplate)
+  }
 }
 
 function loadPosts(){
@@ -22,8 +27,8 @@ function loadPosts(){
   req.send();
   function receive(){
     if (this.readyState != XMLHttpRequest.DONE) return;
-    var template = this.responseText;
-    appendSearchResult(postData, template);
+    postTemplate = this.responseText;
+    appendSearchResult(postData, postTemplate);
   }
 }
 
