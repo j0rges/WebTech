@@ -1,6 +1,16 @@
 "use strict"
 
-addEventListener('load',loadPosts);
+addEventListener('load',script1start);
+
+function script1start(){
+  initButton();
+  loadPosts();
+}
+
+function initButton() {
+  const b = document.querySelector("#myButton");
+  b.addEventListener("click",loadPosts);
+}
 
 function loadPosts(){
   // Substitute for getting the actual data from the server/database.
