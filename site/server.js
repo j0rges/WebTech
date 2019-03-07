@@ -54,6 +54,9 @@ function checkSite() {
 // Serve a request by delivering a file.
 function handle(request, response) {
     let url = request.url.toLowerCase();
+    //
+    console.log(url);
+    //
     if (url.endsWith("/")) url = url + "index.html";
     if (isBanned(url)) return fail(response, NotFound, "URL has been banned");
     let type = findType(url, request);
