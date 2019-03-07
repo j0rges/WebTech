@@ -2,7 +2,7 @@
 var sqlite = require("sqlite");
 var db;
 
-logPosts();
+GetPostsByDestination("Madrid");
 
 async function logPosts() {
   try {
@@ -18,26 +18,16 @@ async function GetPostsWithDestinationAndUsernames(){
                         "join profiles using (username)");
 }
 
-async function GetPostsByDestination(_destination){
+async function GetPostsByDestination(destination){
   try{
     db = await sqlite.open("./db.sqlite");
-    // await db.all("select profiles.name from posts " +
-    //                       "join destinations using (locationID) " +
-    //                       "join profiles using (username)"); //+
-    //                       //"where destination.location =" + _destination);
-    let sql = "select profiles.name username from posts " +
-                          "join destinations using (locationID) " +
-                          "join profiles using (username)";
 
-    await db.all(sql, [], results);
+    let sql = "SELECT * FROM posts JOIN destinations using (locationID) WHERE location = ?";
 
-    function results(err, rows){
-      if (err) {
-        throw err;
-      }
-      rows.forEach(logUsername);
-      function logUsername(row){ console.log(row.username);}
-      //return row.username;
-    }
+    let r = await db.all(sql,[destination]);
+    console.log(r);
+
   }catch (e) { console.log(e); }
+
+  db.close();
 }
