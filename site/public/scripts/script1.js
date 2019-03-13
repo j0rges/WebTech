@@ -6,7 +6,7 @@ var postTemplate;
 
 function script1start(){
   initButton();
-  loadPosts();
+  loadPosts("Madrid",true);
 }
 
 function initButton() {
@@ -17,19 +17,36 @@ function initButton() {
   }
 }
 
-function loadPosts(){
+function loadPosts(destination, getTemplate = false){
   // Substitute for getting the actual data from the server/database.
   var postData = ["Jorge S-C ","Go to el retiro","madrid is great!"];
-  // Get the template from the server.
-  var req = new XMLHttpRequest();
-  req.onreadystatechange = receive;
-  req.open("Get","resulttemplate.html",true);
-  req.send();
-  function receive(){
+
+  // Send request for the first 10 posts of that destination.
+  var dataRequest = new XMLHttpRequest();
+  dataRequest.onreadystatechange = deal;
+  dataRequest.open("Get","searchresults?destination="+destination,true);
+  dataRequest.send();
+  function deal(){
     if (this.readyState != XMLHttpRequest.DONE) return;
-    postTemplate = this.responseText;
+    postData = this.responseText;
+    console.log(postData);
+  }
+  if(getTemplate || postTemplate == null) {
+    // Get the template from the server.
+    var req = new XMLHttpRequest();
+    req.onreadystatechange = receive;
+    req.open("Get","resulttemplate.html",true);
+    req.send();
+    function receive(){
+      if (this.readyState != XMLHttpRequest.DONE) return;
+      postTemplate = this.responseText;
+      appendSearchResult(postData, postTemplate);
+    }
+  }
+  else{
     appendSearchResult(postData, postTemplate);
   }
+
 }
 
 // Given the data and the template append the corresponding post to the
@@ -52,22 +69,3 @@ function appendSearchResult(postData, template){
   newresult.querySelector("#username").innerHTML = "not Jorge! ";
   resultArea.appendChild(newresult);
 }
-
-/*
-
-<script>
-  var destination = 'Madrid';
-
-  var username = GetPostsByDestination(destination);
-  // var title = 'Go to El Retiro';
-  // var content = 'El Retiro is a beautiful place to spend an afternoon.\
-  // This park has a lot of activities to explore. You can rent a boat to go\
-  // in the lake there, have a walk around the extensive grounds or visit the\
-  // free art exhibition which can be found inside the impressive Casa de Cristal.'
-  document.getElementById("destination").innerHTML = destination;
-  document.getElementById("username").innerHTML = username;
-  document.getElementById("title").innerHTML = title;
-  document.getElementById("content").innerHTML = content;
-</script>
-
-*/

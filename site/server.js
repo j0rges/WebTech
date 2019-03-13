@@ -23,13 +23,15 @@ let verbose = true;
 
 let http = require("http");
 let fs = require("fs");
+// include my database functionality
+let database = require("./dbqueries")
 let OK = 200, NotFound = 404, BadType = 415, Error = 500;
 let types, banned;
 
 start();
 
 // Start the http service. Accept only requests from localhost, for security.
-function start() {
+async function start() {
     if (! checkSite()) return;
     types = defineTypes();
     banned = [];
@@ -39,6 +41,12 @@ function start() {
     let address = "http://localhost";
     if (port != 80) address = address + ":" + port;
     console.log("Server running at", address);
+    // start the database
+    try {
+      await database.openDB("./db.sqlite");
+    } catch (e) {
+      console.log(e);
+    }
 }
 
 // Check that the site folder and index page exist.
@@ -52,18 +60,51 @@ function checkSite() {
 }
 
 // Serve a request by delivering a file.
-function handle(request, response) {
+async function handle(request, response) {
     let url = request.url.toLowerCase();
     //
     console.log(url);
     //
-    if (url.endsWith("/")) url = url + "index.html";
-    if (isBanned(url)) return fail(response, NotFound, "URL has been banned");
-    let type = findType(url, request);
-    if (type == null) return fail(response, BadType, "File type unsupported");
-    let file = "./public" + url;
-    fs.readFile(file, ready);
-    function ready(err, content) { deliver(response, type, err, content); }
+    if (url.includes('?')) {
+      await handleDataRequest(request, response);
+    } else {
+      if (url.endsWith("/")) url = url + "index.html";
+      if (isBanned(url)) return fail(response, NotFound, "URL has been banned");
+      let type = findType(url, request);
+      if (type == null) return fail(response, BadType, "File type unsupported");
+      let file = "./public" + url;
+      fs.readFile(file, ready);
+      function ready(err, content) { deliver(response, type, err, content); }
+  }
+}
+
+// Serve a request by delivering data from the database
+async function handleDataRequest(request, response) {
+  let url = request.url.toLowerCase();
+  let urlPieces = url.split("?");
+  let query = urlPieces[1].split("&");
+  for(var i = 0; i < query.length; i++) {
+    query[i] = query[i].split("=");
+  }
+  console.log(query);
+  // try to get the data requested
+  try {
+    let data = "this is my default.";
+    if(query[0][0] == "destination"){
+      place = query[0][1]
+      // Capitalize the first letter of the place.
+      place = place[0].toUpperCase() + place.substring(1);
+      data = await database.GetPostsByDestination(place);
+      console.log(data);
+    }
+    let typeHeader = { "Content-Type": types["txt"]};
+    response.writeHead(OK, typeHeader);
+    response.write(data);
+    response.end();
+  } catch (e) {
+    console.log(e);
+    fail(response, NotFound, "Couldn't find the data requested.")
+  }
 }
 
 

@@ -2,12 +2,30 @@
 var sqlite = require("sqlite");
 var db;
 
-GetPostsByDestination("Madrid");
+/*
+async function patata(){
+  try {
+    await opendb("./db.sqlite");
+    var posts = await GetPostsByDestination("Madrid");
+    console.log(posts);
+  } catch (e) {
+    console.log(e);
+  }
+  await closeDB();
+}
+*/
+
+async function openDB(path) {
+  db = await sqlite.open(path);
+}
+
+async function closeDB() {
+  await db.close();
+}
 
 async function logPosts() {
   try {
-    db = await sqlite.open("./db.sqlite");
-    var as = await GetPostsWithDestinationAndUsernames();
+    let as = await GetPostsWithDestinationAndUsernames();
     console.log(as); // Access
   } catch (e) { console.log(e); }
 }
@@ -19,15 +37,19 @@ async function GetPostsWithDestinationAndUsernames(){
 }
 
 async function GetPostsByDestination(destination){
+  let r;
   try{
-    db = await sqlite.open("./db.sqlite");
 
     let sql = "SELECT * FROM posts JOIN destinations using (locationID) WHERE location = ?";
-
-    let r = await db.all(sql,[destination]);
-    console.log(r);
+    r = await db.all(sql,[destination]);
 
   }catch (e) { console.log(e); }
 
-  db.close();
+  return r;
 }
+
+module.exports = {
+  openDB : openDB,
+  closeDB : closeDB,
+  GetPostsByDestination : GetPostsByDestination
+};
