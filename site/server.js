@@ -24,7 +24,7 @@ let verbose = true;
 let http = require("http");
 let fs = require("fs");
 // include my database functionality
-let database = require("./dbqueries")
+let database = require("./db/dbqueries")
 let OK = 200, NotFound = 404, BadType = 415, Error = 500;
 let types, banned;
 
@@ -43,7 +43,7 @@ async function start() {
     console.log("Server running at", address);
     // start the database
     try {
-      await database.openDB("./db.sqlite");
+      await database.openDB("./db/db.sqlite");
     } catch (e) {
       console.log(e);
     }
@@ -99,7 +99,7 @@ async function handleDataRequest(request, response) {
     }
     let typeHeader = { "Content-Type": types["txt"]};
     response.writeHead(OK, typeHeader);
-    response.write(data);
+    response.write(JSON.stringify(data));
     response.end();
   } catch (e) {
     console.log(e);

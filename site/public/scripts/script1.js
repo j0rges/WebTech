@@ -6,7 +6,11 @@ var postTemplate;
 
 function script1start(){
   initButton();
-  loadPosts("Madrid",true);
+  getTemplate("resulttemplate.html",c);
+  function c(result) {
+    postTemplate = result;
+    loadPosts("Madrid");
+  }
 }
 
 function initButton() {
@@ -17,10 +21,9 @@ function initButton() {
   }
 }
 
-function loadPosts(destination, getTemplate = false){
+function loadPosts(destination){
   // Substitute for getting the actual data from the server/database.
-  var postData = ["Jorge S-C ","Go to el retiro","madrid is great!"];
-
+  var postData;
   // Send request for the first 10 posts of that destination.
   var dataRequest = new XMLHttpRequest();
   dataRequest.onreadystatechange = deal;
@@ -28,25 +31,22 @@ function loadPosts(destination, getTemplate = false){
   dataRequest.send();
   function deal(){
     if (this.readyState != XMLHttpRequest.DONE) return;
-    postData = this.responseText;
-    console.log(postData);
+    postData = JSON.parse(this.responseText)[0];
+    appendSearchResult(postData,postTemplate);
   }
-  if(getTemplate || postTemplate == null) {
-    // Get the template from the server.
-    var req = new XMLHttpRequest();
-    req.onreadystatechange = receive;
-    req.open("Get","resulttemplate.html",true);
-    req.send();
-    function receive(){
-      if (this.readyState != XMLHttpRequest.DONE) return;
-      postTemplate = this.responseText;
-      appendSearchResult(postData, postTemplate);
-    }
-  }
-  else{
-    appendSearchResult(postData, postTemplate);
-  }
+}
 
+function getTemplate(adrr,callback) {
+  var req = new XMLHttpRequest();
+  req.onreadystatechange = receive;
+  req.open("Get",adrr,true);
+  req.send();
+  var template;
+  function receive(){
+    if (this.readyState != XMLHttpRequest.DONE) return;
+    template = this.responseText;
+    callback(template);
+  }
 }
 
 // Given the data and the template append the corresponding post to the
@@ -58,14 +58,12 @@ function appendSearchResult(postData, template){
   // put the template inside.
   result.innerHTML = template;
   // Load the post into the template.
-  var ids = ["#username","#title","#content-text"];
+  var tags = ["#username","#title","#content-text"];
+  var ids = ["username","title","text"];
   for(var i = 0; i < ids.length; i++){
-    var element = result.querySelector(ids[i]);
-    element.innerHTML = postData[i];
+    var element = result.querySelector(tags[i]);
+    element.innerHTML = postData[ids[i]] + ' ';
   }
   var resultArea = document.querySelector("#results-area");
   resultArea.appendChild(result);
-  var newresult = result.cloneNode(true);
-  newresult.querySelector("#username").innerHTML = "not Jorge! ";
-  resultArea.appendChild(newresult);
 }
