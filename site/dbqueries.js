@@ -1,19 +1,20 @@
 "use strict"
-var sqlite = require("sqlite");
+let sqlite = require("sqlite");
 var db;
 
-/*
+patata();
+
 async function patata(){
   try {
-    await opendb("./db.sqlite");
-    var posts = await GetPostsByDestination("Madrid");
+    await openDB("./db.sqlite");
+    var posts = await GetPostsByDestination("Athens");
     console.log(posts);
   } catch (e) {
     console.log(e);
   }
   await closeDB();
 }
-*/
+
 
 async function openDB(path) {
   db = await sqlite.open(path);
@@ -25,16 +26,11 @@ async function closeDB() {
 
 async function logPosts() {
   try {
-    let as = await GetPostsWithDestinationAndUsernames();
+    let as = await db.all("SELECT * FROM posts JOIN destinations USING (locationID)");
     console.log(as); // Access
   } catch (e) { console.log(e); }
 }
 
-async function GetPostsWithDestinationAndUsernames(){
-  return await db.all("select * from posts " +
-                        "join destinations using (locationID) " +
-                        "join profiles using (username)");
-}
 
 async function GetPostsByDestination(destination){
   let r;
