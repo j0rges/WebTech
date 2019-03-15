@@ -9,7 +9,7 @@ function script1start(){
   getTemplate("resulttemplate.html",c);
   function c(result) {
     postTemplate = result;
-    loadPosts("Madrid");
+    startPosts();
   }
 }
 
@@ -17,7 +17,7 @@ function initButton() {
   const b = document.querySelector("#myButton");
   b.addEventListener("click",c);
   function c(){
-    appendSearchResult(["Jorge S-C ","Go to el retiro","madrid is great!"],postTemplate)
+    //appendSearchResult(["Jorge S-C ","Go to el retiro","madrid is great!"],postTemplate)
   }
 }
 
@@ -32,7 +32,15 @@ function loadPosts(destination){
   function deal(){
     if (this.readyState != XMLHttpRequest.DONE) return;
     postData = JSON.parse(this.responseText)[0];
-    appendSearchResult(postData,postTemplate);
+    if (postData != undefined){
+      appendSearchResult(postData,postTemplate);
+    }
+    else {
+      var apologisingText = document.createElement("p");
+      apologisingText.innerHTML = 'Oops! No posts about this destination.. Want to write one?';
+      var resultArea = document.querySelector("#results-area");
+      resultArea.appendChild(apologisingText);
+    }
   }
 }
 
@@ -66,4 +74,22 @@ function appendSearchResult(postData, template){
   }
   var resultArea = document.querySelector("#results-area");
   resultArea.appendChild(result);
+}
+
+function startPosts() {
+    var url = window.location.href;
+    var q = url.indexOf("?");
+    if (q < 0) return reportNone();
+    var query = url.substring(q + 1);
+    var defs = query.split("&");
+    for (var i=0; i<defs.length; i++) {
+        defs[i] = defs[i].split("=");
+    }
+    setTitleDestination(defs[0][1]);
+    loadPosts(defs[0][1]);
+}
+
+function setTitleDestination(destination){
+  var location = document.querySelector("#destination");
+  location.innerHTML = destination;
 }
