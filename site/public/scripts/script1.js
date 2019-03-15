@@ -27,7 +27,7 @@ function loadPosts(destination){
   // Send request for the first 10 posts of that destination.
   var dataRequest = new XMLHttpRequest();
   dataRequest.onreadystatechange = deal;
-  dataRequest.open("Get","searchresults?destination="+destination,true);
+  dataRequest.open("Get","data?destination="+destination,true);
   dataRequest.send();
   function deal(){
     if (this.readyState != XMLHttpRequest.DONE) return;

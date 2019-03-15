@@ -65,9 +65,15 @@ async function handle(request, response) {
     //
     console.log(url);
     //
-    if (url.includes('?')) {
+    let splitUrl = url.split('?')[0];
+    let arraySplit = splitUrl.split('/');
+    let keyWord = arraySplit[arraySplit.length -1];
+
+    if(keyWord == 'data'){
       await handleDataRequest(request, response);
-    } else {
+    }
+    else {
+      url = splitUrl;
       if (url.endsWith("/")) url = url + "index.html";
       if (isBanned(url)) return fail(response, NotFound, "URL has been banned");
       let type = findType(url, request);
@@ -75,7 +81,7 @@ async function handle(request, response) {
       let file = "./public" + url;
       fs.readFile(file, ready);
       function ready(err, content) { deliver(response, type, err, content); }
-  }
+    }
 }
 
 // Serve a request by delivering data from the database
@@ -86,7 +92,7 @@ async function handleDataRequest(request, response) {
   for(var i = 0; i < query.length; i++) {
     query[i] = query[i].split("=");
   }
-  console.log(query);
+  //console.log(query);
   // try to get the data requested
   try {
     let data = "this is my default.";
@@ -95,12 +101,9 @@ async function handleDataRequest(request, response) {
       // Capitalize the first letter of the place.
       place = place[0].toUpperCase() + place.substring(1);
       data = await database.GetPostsByDestination(place);
-      console.log(data);
+      //console.log(data);
     }
-    let typeHeader = { "Content-Type": types["txt"]};
-    response.writeHead(OK, typeHeader);
-    response.write(JSON.stringify(data));
-    response.end();
+    deliver(response,types["json"],false,JSON.stringify(data));
   } catch (e) {
     console.log(e);
     fail(response, NotFound, "Couldn't find the data requested.")
