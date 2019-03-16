@@ -62,13 +62,14 @@ function checkSite() {
 // Serve a request by delivering a file.
 async function handle(request, response) {
     let url = request.url.toLowerCase();
-    //
     console.log(url);
-    //
+
+    // Manipulate url to extract the keyWord
     let splitUrl = url.split('?')[0];
     let arraySplit = splitUrl.split('/');
     let keyWord = arraySplit[arraySplit.length -1];
 
+    // Make a dicision about what kind of url in coming in
     if(keyWord == 'data'){
       await handleDataRequest(request, response);
     }
@@ -86,14 +87,14 @@ async function handle(request, response) {
 
 // Serve a request by delivering data from the database
 async function handleDataRequest(request, response) {
+
   let url = request.url.toLowerCase();
-  let urlPieces = url.split("?");
-  let query = urlPieces[1].split("&");
-  for(var i = 0; i < query.length; i++) {
-    query[i] = query[i].split("=");
-  }
+
+  let query = prepare(url);
+
   //console.log(query);
-  // try to get the data requested
+
+  // Try to get the data requested
   try {
     let data = "this is my default.";
     if(query[0][0] == "destination"){
@@ -110,6 +111,16 @@ async function handleDataRequest(request, response) {
   }
 }
 
+function prepare(url) {
+  // Split url at ?
+  let urlPieces = url.split("?");
+  let query = urlPieces[1].split("&");
+
+  for(var i = 0; i < query.length; i++) {
+    query[i] = query[i].split("=");
+  }
+  return query;
+}
 
 // Forbid any resources which shouldn't be delivered to the browser.
 function isBanned(url) {
