@@ -70,14 +70,27 @@ async function handle(request, response) {
   let keyWord = arraySplit[arraySplit.length -1];
 
   if (request.method.toLowerCase() == "post") {
-    let body = '';
-    request.on('data', add);
-    function add(chunk) {body += chunk.toString();}
-    request.on('end', endStuff);
-    function endStuff(){
-      body = parse(body);
-      console.log(body);
+    // get only the contentType
+    contentType = request.headers["content-type"].split(";")[0];
+    console.log(contentType);
+    
+    if (contentType == 'application/x-www-form-urlencoded') {
+      let body = '';
+      request.on('data', add);
+      function add(chunk) {body += chunk.toString();}
+      request.on('end', endStuff);
+      function endStuff(){
+        body = parse(body);
+        console.log(body);
+        response.end('ok');
+      }
+    }
+    else if (contentType == 'multipart/form-data'){
+      console.log(request.headers);
       response.end('ok');
+    } else {
+      console.log(request.headers);
+      fail(response, BadType, "Content type not supported");
     }
   }
   else { // ie method is GET
