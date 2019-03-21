@@ -62,52 +62,40 @@ function checkSite() {
 
 // Serve a request by delivering a file.
 async function handle(request, response) {
-    let url = request.url.toLowerCase();
-    console.log(request.url, request.method);
+  let url = request.url.toLowerCase();
 
-    // Manipulate url to extract the keyWord
-    let splitUrl = url.split('?')[0];
-    let arraySplit = splitUrl.split('/');
-    let keyWord = arraySplit[arraySplit.length -1];
-    console.log(arraySplit, keyWord);
+  // Manipulate url to extract the keyWord
+  let splitUrl = url.split('?')[0];
+  let arraySplit = splitUrl.split('/');
+  let keyWord = arraySplit[arraySplit.length -1];
 
-    if (request.method.toLowerCase() == "post") {
-      let body = '';
-      request.on('data', add);
-      function add(chunk) {body += chunk.toString();}
-      request.on('end', endStuff);
-      function endStuff(){
-        body = parse(body);
-        console.log(body);
-        response.end('ok');
-      }
+  if (request.method.toLowerCase() == "post") {
+    let body = '';
+    request.on('data', add);
+    function add(chunk) {body += chunk.toString();}
+    request.on('end', endStuff);
+    function endStuff(){
+      body = parse(body);
+      console.log(body);
+      response.end('ok');
     }
-    else { // ie method is GET
-      // Make a dicision about what kind of url in coming in
-      if(keyWord == 'data'){
-        await handleDataRequest(request, response);
-      }
-      else {
-        url = splitUrl;
-        if (url.endsWith("/")) url = url + "index.html";
-        if (isBanned(url)) return fail(response, NotFound, "URL has been banned");
-        let type = findType(url, request);
-        if (type == null) return fail(response, BadType, "File type unsupported");
-        let file = "./public" + url;
-        fs.readFile(file, ready);
-        function ready(err, content) { deliver(response, type, err, content); }
-      }
+  }
+  else { // ie method is GET
+    // Make a dicision about what kind of url in coming in
+    if(keyWord == 'data'){
+      await handleDataRequest(request, response);
     }
+    else {
+      handleFileRequest(request, response, splitUrl);
+    }
+  }
 }
 
-// Serve a request by delivering data from the database
+// Serve a request by delivering data from the database.
 async function handleDataRequest(request, response) {
 
   let url = request.url.toLowerCase();
-
-  let query = prepareUrl(url);
-
-  //console.log(query);
+  let query = getQuery(url);
 
   // Try to get the data requested
   try {
@@ -126,7 +114,18 @@ async function handleDataRequest(request, response) {
   }
 }
 
-function prepareUrl(url) {
+// Serve a request that requires a file being delivered.
+function handleFileRequest(request, response, url){
+  if (url.endsWith("/")) url = url + "index.html";
+  if (isBanned(url)) return fail(response, NotFound, "URL has been banned");
+  let type = findType(url, request);
+  if (type == null) return fail(response, BadType, "File type unsupported");
+  let file = "./public" + url;
+  fs.readFile(file, ready);
+  function ready(err, content) { deliver(response, type, err, content); }
+}
+
+function getQuery(url) {
   // Split url at ?
   let urlPieces = url.split("?");
   let query = urlPieces[1].split("&");
