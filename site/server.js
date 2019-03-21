@@ -23,6 +23,7 @@ let verbose = true;
 
 let http = require("http");
 let fs = require("fs");
+const { parse } = require('querystring');
 // include my database functionality
 let database = require("./db/dbqueries")
 let OK = 200, NotFound = 404, BadType = 415, Error = 500;
@@ -62,26 +63,40 @@ function checkSite() {
 // Serve a request by delivering a file.
 async function handle(request, response) {
     let url = request.url.toLowerCase();
-    console.log(url);
+    console.log(request.url, request.method);
 
     // Manipulate url to extract the keyWord
     let splitUrl = url.split('?')[0];
     let arraySplit = splitUrl.split('/');
     let keyWord = arraySplit[arraySplit.length -1];
+    console.log(arraySplit, keyWord);
 
-    // Make a dicision about what kind of url in coming in
-    if(keyWord == 'data'){
-      await handleDataRequest(request, response);
+    if (request.method.toLowerCase() == "post") {
+      let body = '';
+      request.on('data', add);
+      function add(chunk) {body += chunk.toString();}
+      request.on('end', endStuff);
+      function endStuff(){
+        body = parse(body);
+        console.log(body);
+        response.end('ok');
+      }
     }
-    else {
-      url = splitUrl;
-      if (url.endsWith("/")) url = url + "index.html";
-      if (isBanned(url)) return fail(response, NotFound, "URL has been banned");
-      let type = findType(url, request);
-      if (type == null) return fail(response, BadType, "File type unsupported");
-      let file = "./public" + url;
-      fs.readFile(file, ready);
-      function ready(err, content) { deliver(response, type, err, content); }
+    else { // ie method is GET
+      // Make a dicision about what kind of url in coming in
+      if(keyWord == 'data'){
+        await handleDataRequest(request, response);
+      }
+      else {
+        url = splitUrl;
+        if (url.endsWith("/")) url = url + "index.html";
+        if (isBanned(url)) return fail(response, NotFound, "URL has been banned");
+        let type = findType(url, request);
+        if (type == null) return fail(response, BadType, "File type unsupported");
+        let file = "./public" + url;
+        fs.readFile(file, ready);
+        function ready(err, content) { deliver(response, type, err, content); }
+      }
     }
 }
 
@@ -90,7 +105,7 @@ async function handleDataRequest(request, response) {
 
   let url = request.url.toLowerCase();
 
-  let query = prepare(url);
+  let query = prepareUrl(url);
 
   //console.log(query);
 
@@ -111,7 +126,7 @@ async function handleDataRequest(request, response) {
   }
 }
 
-function prepare(url) {
+function prepareUrl(url) {
   // Split url at ?
   let urlPieces = url.split("?");
   let query = urlPieces[1].split("&");
