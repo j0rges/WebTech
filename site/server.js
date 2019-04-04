@@ -73,7 +73,7 @@ async function handle(request, response) {
     // get only the contentType
     contentType = request.headers["content-type"].split(";")[0];
     console.log(contentType);
-
+    
     if (contentType == 'application/x-www-form-urlencoded') {
       let body = '';
       request.on('data', add);
@@ -88,8 +88,7 @@ async function handle(request, response) {
     else if (contentType == 'multipart/form-data'){
       console.log(request.headers);
       response.end('ok');
-    }
-    else {
+    } else {
       console.log(request.headers);
       fail(response, BadType, "Content type not supported");
     }
