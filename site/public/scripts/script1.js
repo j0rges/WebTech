@@ -63,11 +63,11 @@ function appendSearchResult(postData, template){
   // Create the section and give it the appropiate class.
   var result = document.createElement("section");
   result.setAttribute("class", "search-result")
-  // put the template inside.
+  // Put the template inside.
   result.innerHTML = template;
   // Load the post into the template.
-  var tags = ["#username","#title","#content-text"];
-  var ids = ["username","title","text"];
+  var tags = ["#username","#title","#content-text",'#imagePath'];
+  var ids = ["username","title","text","imagePath"];
   for(var i = 0; i < ids.length; i++){
     var element = result.querySelector(tags[i]);
     element.innerHTML = postData[ids[i]] + ' ';
