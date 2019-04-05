@@ -70,39 +70,51 @@ async function handle(request, response) {
   let arraySplit = splitUrl.split('/');
   let keyWord = arraySplit[arraySplit.length -1];
 
-  if (request.method.toLowerCase() == "post") {
-    // get only the contentType
-    contentType = request.headers["content-type"].split(";")[0];
-    console.log(contentType);
 
-    if (contentType == 'application/x-www-form-urlencoded') {
-      let body = '';
-      request.on('data', add);
-      function add(chunk) {body += chunk.toString();}
-      request.on('end', endStuff);
-      function endStuff(){
-        body = parse(body);
-        console.log(body);
-        response.end('ok');
+  switch (request.method.toLowerCase()) {
+    case "post":
+      contentType = request.headers["content-type"].split(";")[0];
+      console.log(contentType);
+
+      if (contentType == 'application/x-www-form-urlencoded') {
+        let body = '';
+        request.on('data', add);
+        function add(chunk) {body += chunk.toString();}
+        request.on('end', endStuff);
+        function endStuff(){
+          body = parse(body);
+          console.log(body);
+          response.end('ok');
+        }
       }
-    }
-    else if (contentType == 'multipart/form-data'){
-      handleMultipart(request, response);
-    }
-    else {
-      console.log(request.headers);
-      fail(response, BadType, "Content type not supported");
-    }
+      else if (contentType == 'multipart/form-data'){
+        handleMultipart(request, response);
+      }
+      else {
+        console.log(request.headers);
+        fail(response, BadType, "Content type not supported");
+      }
+      break;
+
+    case "get":
+      // Make a dicision about what kind of url in coming in
+      if(keyWord == 'data'){
+        await handleDataRequest(request, response);
+      }
+      else {
+        handleFileRequest(request, response, splitUrl);
+      }
+      break;
+
+    case "put":
+      fail(response, BadType, "Request method not supported by the server.");
+      break;
+
+    default:
+      fail(response, BadType, "Request method not supported by the server.");
   }
-  else { // ie method is GET
-    // Make a dicision about what kind of url in coming in
-    if(keyWord == 'data'){
-      await handleDataRequest(request, response);
-    }
-    else {
-      handleFileRequest(request, response, splitUrl);
-    }
-  }
+
+  
 }
 
 // Serve a request by delivering data from the database.
@@ -150,7 +162,7 @@ function handleMultipart(request, response) {
   request.on('end', endStuff);
   function endStuff(){
     parts = parseMultipart(body);
-    fs.writeFile('image.jpg', parts[2].content, function (err) {
+    fs.writeFile(parts[2].filename, parts[2].content, function (err) {
       if (err) throw err;
       console.log('Saved!');
     });
