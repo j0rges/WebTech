@@ -64,6 +64,7 @@ function checkSite() {
 // Serve a request by delivering a file.
 async function handle(request, response) {
   let url = request.url.toLowerCase();
+  console.log(url);
 
   // Manipulate url to extract the keyWord
   let splitUrl = url.split('?')[0];
@@ -83,7 +84,6 @@ async function handle(request, response) {
         request.on('end', endStuff);
         function endStuff(){
           body = parse(body);
-          console.log(body);
           response.end('ok');
         }
       }
@@ -107,14 +107,24 @@ async function handle(request, response) {
       break;
 
     case "put":
-      fail(response, BadType, "Request method not supported by the server.");
+      console.log(url);
+      let body = '';
+      request.on('data', add);
+      function add(chunk) {body += chunk.toString();}
+      request.on('end', endStuff);
+      function endStuff(){o
+        fs.writeFile("newimage.jpg", body, function (err) {
+          if (err) throw err;
+          console.log('Saved!');
+        });
+        response.end('ok');
+      }
       break;
 
     default:
       fail(response, BadType, "Request method not supported by the server.");
   }
 
-  
 }
 
 // Serve a request by delivering data from the database.
