@@ -21,6 +21,6 @@ async function create() {
         await db.run("insert into profiles values ('JorgeSc','Jorge Sanchez-Cano')");
 
         await db.run("insert into posts values (1,1,'KonstantinaPs','Summer in Athens','Really hot at summer time but really beautiful as well.','')");
-        await db.run("insert into posts values (2,3,'JorgeSc','An afternoon in Madrid','I recommend going to the Retiro to have a nice afternoon outside.', '../public/images/alev-takil.png')");
+        await db.run("insert into posts values (2,3,'JorgeSc','An afternoon in Madrid','I recommend going to the Retiro to have a nice afternoon outside.', '/images/alev-takil.png')");
     } catch (e) { console.log(e); }
 }
