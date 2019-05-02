@@ -21,6 +21,7 @@ let verbose = true;
 // See http://en.wikipedia.org/wiki/List_of_HTTP_status_codes.
 // Start the server:
 
+const { parseMultipart } = require("./multipart.js");
 let http = require("http");
 let fs = require("fs");
 const { parse } = require('querystring');
@@ -69,39 +70,51 @@ async function handle(request, response) {
   let arraySplit = splitUrl.split('/');
   let keyWord = arraySplit[arraySplit.length -1];
 
-  if (request.method.toLowerCase() == "post") {
-    // get only the contentType
-    contentType = request.headers["content-type"].split(";")[0];
-    console.log(contentType);
 
-    if (contentType == 'application/x-www-form-urlencoded') {
-      let body = '';
-      request.on('data', add);
-      function add(chunk) {body += chunk.toString();}
-      request.on('end', endStuff);
-      function endStuff(){
-        body = parse(body);
-        console.log(body);
-        response.end('ok');
+  switch (request.method.toLowerCase()) {
+    case "post":
+      contentType = request.headers["content-type"].split(";")[0];
+      console.log(contentType);
+
+      if (contentType == 'application/x-www-form-urlencoded') {
+        let body = '';
+        request.on('data', add);
+        function add(chunk) {body += chunk.toString();}
+        request.on('end', endStuff);
+        function endStuff(){
+          body = parse(body);
+          console.log(body);
+          response.end('ok');
+        }
       }
-    }
-    else if (contentType == 'multipart/form-data'){
-      handleMultipart(request, response);
-    }
-    else {
-      console.log(request.headers);
-      fail(response, BadType, "Content type not supported");
-    }
+      else if (contentType == 'multipart/form-data'){
+        handleMultipart(request, response);
+      }
+      else {
+        console.log(request.headers);
+        fail(response, BadType, "Content type not supported");
+      }
+      break;
+
+    case "get":
+      // Make a dicision about what kind of url in coming in
+      if(keyWord == 'data'){
+        await handleDataRequest(request, response);
+      }
+      else {
+        handleFileRequest(request, response, splitUrl);
+      }
+      break;
+
+    case "put":
+      fail(response, BadType, "Request method not supported by the server.");
+      break;
+
+    default:
+      fail(response, BadType, "Request method not supported by the server.");
   }
-  else { // ie method is GET
-    // Make a dicision about what kind of url in coming in
-    if(keyWord == 'data'){
-      await handleDataRequest(request, response);
-    }
-    else {
-      handleFileRequest(request, response, splitUrl);
-    }
-  }
+
+  
 }
 
 // Serve a request by delivering data from the database.
@@ -149,7 +162,7 @@ function handleMultipart(request, response) {
   request.on('end', endStuff);
   function endStuff(){
     parts = parseMultipart(body);
-    fs.writeFile('image.jpg', parts[2].content, function (err) {
+    fs.writeFile(parts[2].filename, parts[2].content, function (err) {
       if (err) throw err;
       console.log('Saved!');
     });
@@ -157,49 +170,7 @@ function handleMultipart(request, response) {
   }
 }
 
-function parseMultipart(body){
-  parts = body.split(boundary);
-  indices = [];
 
-  for (var i in parts){
-    parts[i] = parseMultipartPiece(parts[i]);
-    if(parts[i].content == undefined){
-      // to adjust for the indices changing.
-      indices.push(i - indices.length);
-    }
-  }
-  //delete the elements that are empty:
-  for (var i = 0; i < indices.length; i++) {
-    parts.splice(indices[i],1);
-  }
-  return parts;
-}
-
-// Returns an object with the name of the form field as attribute field and
-// the content as attribute content.
-function parseMultipartPiece(piece){
-  let field = {filename: "", contentType: types["txt"], content: ""};
-  let temp;
-  temp = piece.substring(piece.indexOf("name=\"")+6);
-  field.name = temp.substring(0,temp.indexOf("\""));
-
-  let index = piece.indexOf("filename=\"");
-  // Parse a piece that carries a file.
-  if(index > 0){
-    temp = piece.substring(index+10);
-    field.filename = temp.substring(0,temp.indexOf("\""));
-    temp = piece.substring(piece.indexOf("Content-Type: ")+14);
-    field.contentType = temp.substring(0,temp.indexOf("\r\n"));
-    temp = temp.substring(temp.indexOf("\r\n")+2);
-    field.content = temp.substring(0,temp.lastIndexOf("\r\n"));
-  }
-  // Parse a piece that contains text.
-  else{
-    piece = piece.split("\r\n");
-    field.content = piece[3];
-  }
-  return field;
-}
 
 function getQuery(url) {
   // Split url at ?
