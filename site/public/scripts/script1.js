@@ -66,11 +66,19 @@ function appendSearchResult(postData, template){
   // Put the template inside.
   result.innerHTML = template;
   // Load the post into the template.
-  var tags = ["#username","#title","#content-text",'#imagePath'];
-  var ids = ["username","title","text","imagePath"];
+  var tags = ["#username","#title","#content-text"];
+  var ids = ["username","title","text"];
   for(var i = 0; i < ids.length; i++){
     var element = result.querySelector(tags[i]);
     element.innerHTML = postData[ids[i]] + ' ';
+  }
+  //Check if the post has an image. If it doesn't then remove the image element.
+  var imageTag = "#imagePath";
+  var imageId = "image";
+  var imageElem = result.querySelector(imageTag);
+  console.log(imageElem);
+  if (imageElem == ''){
+    imageElem.style.display = 'none';
   }
   var resultArea = document.querySelector("#results-area");
   resultArea.appendChild(result);
