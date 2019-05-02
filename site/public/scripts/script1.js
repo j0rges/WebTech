@@ -60,6 +60,7 @@ function getTemplate(adrr,callback) {
 // Given the data and the template append the corresponding post to the
 // search result area.
 function appendSearchResult(postData, template){
+  console.log(postData);
   // Create the section and give it the appropiate class.
   var result = document.createElement("section");
   result.setAttribute("class", "search-result")
@@ -73,12 +74,13 @@ function appendSearchResult(postData, template){
     element.innerHTML = postData[ids[i]] + ' ';
   }
   //Check if the post has an image. If it doesn't then remove the image element.
-  var imageTag = "#imagePath";
-  var imageId = "image";
+  var imageTag = "#image";
+  var imageId = "imagePath";
   var imageElem = result.querySelector(imageTag);
-  console.log(imageElem);
-  if (imageElem == ''){
+  if (postData[imageId] == ''){
     imageElem.style.display = 'none';
+  }else {
+    imageElem.setAttribute("src","postData[imageId]");
   }
   var resultArea = document.querySelector("#results-area");
   resultArea.appendChild(result);
