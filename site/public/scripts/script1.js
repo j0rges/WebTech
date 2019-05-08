@@ -60,7 +60,6 @@ function getTemplate(adrr,callback) {
 // Given the data and the template append the corresponding post to the
 // search result area.
 function appendSearchResult(postData, template){
-  console.log(postData);
   // Create the section and give it the appropiate class.
   var result = document.createElement("section");
   result.setAttribute("class", "search-result")

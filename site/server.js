@@ -75,7 +75,6 @@ async function handle(request, response) {
   switch (request.method.toLowerCase()) {
     case "post":
       contentType = request.headers["content-type"].split(";")[0];
-      console.log(contentType);
 
       if (contentType == 'application/x-www-form-urlencoded') {
         let body = '';
@@ -84,6 +83,7 @@ async function handle(request, response) {
         request.on('end', endStuff);
         function endStuff(){
           body = parse(body);
+          console.log(body);
           response.end('ok');
         }
       }
