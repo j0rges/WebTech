@@ -14,10 +14,20 @@ function script1start(){
 }
 
 function initButton() {
-  const b = document.querySelector("#myButton");
-  b.addEventListener("click",c);
+  const b = document.querySelector("#newPostButton");
+  b.addEventListener("click",newPost);
   function c(){
+
     //appendSearchResult(["Jorge S-C ","Go to el retiro","madrid is great!"],postTemplate)
+  }
+}
+
+function newPost() {
+  // Change the results for the new post form.
+  getTemplate("../postform.html",c);
+  function c(template){
+    var resultArea = document.querySelector("#results-area");
+    resultArea.innerHTML= template;
   }
 }
 
