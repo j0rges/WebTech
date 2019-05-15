@@ -1,4 +1,4 @@
-"use strict"
+"use strict";
 
 addEventListener('load',script1start);
 
@@ -17,7 +17,6 @@ function initButton() {
   const b = document.querySelector("#newPostButton");
   b.addEventListener("click",newPost);
   function c(){
-
     //appendSearchResult(["Jorge S-C ","Go to el retiro","madrid is great!"],postTemplate)
   }
 }

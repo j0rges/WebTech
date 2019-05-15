@@ -27,7 +27,7 @@ let fs = require("fs");
 const { parse } = require('querystring');
 // include my database functionality
 let database = require("./db/dbqueries")
-let OK = 200, NotFound = 404, BadType = 415, Error = 500;
+let OK = 200, NotFound = 404, BadType = 415, Error = 500, InvalidRequest = 400;
 let types, banned;
 
 start();
