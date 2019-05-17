@@ -5,9 +5,10 @@ header {
 header a {
   float: right;
   display: block;
-  color: #068D9D;
+  color: #f0d23cff;
   text-align: center;
   padding: 1em 2em;
+  font-size: 1.5em;
   text-decoration: none;
 }
 header a:hover {
