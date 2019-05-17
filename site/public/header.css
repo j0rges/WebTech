@@ -1,15 +1,15 @@
 header {
   overflow: hidden;
-  background-color: #103E3C;
+  background-color: #E7ECEF;
 }
 header a {
-  float: left;
+  float: right;
   display: block;
-  color: rgb(200, 200, 200);
+  color: #068D9D;
   text-align: center;
   padding: 1em 2em;
   text-decoration: none;
 }
 header a:hover {
-  background-color: #002E2C;
+  background-color: #86BBD8;
 }
