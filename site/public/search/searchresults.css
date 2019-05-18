@@ -3,7 +3,7 @@
 }
 
 body {
-  background-color: #C5DCA0;
+  background-color: #CEEAF7;
   min-width: 500px;
 }
 .column {
@@ -24,7 +24,7 @@ body {
 
 .search-result {
   display: block;
-  background-color: #48A9A6;
+  background-color: #1EA8CD;
   margin: 5px;
   padding: 5px;
   border-radius: 5px;
@@ -41,7 +41,7 @@ h6 {
 }
 h5 {font-size: 1.2em; padding-left: 10px;}
 hr {
-  border-color: #288986;
+  border-color: #CEEAF7;
   border-style:solid;
   margin: 1px;
 }
