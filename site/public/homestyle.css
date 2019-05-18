@@ -19,11 +19,22 @@ input.search {
   outline: none;
   background-color: #E7ECEF;
  }
+
 h1 { color: #E7ECEF; font-size: 3em; }
+
 .center {
   position: absolute;
   top: 25%;
   width: 100%;
   text-align: center;
   text-shadow: -1px 0 #86BBD8, 0 1px #86BBD8, 1px 0 #86BBD8, 0 -1px #86BBD8;
+}
+
+/* Style the footer */
+footer {
+  background-color: #E7ECEF;
+  padding: 10px;
+  text-align: center;
+  font-size: 0.8em;
+  color: #86BBD8;
 }
