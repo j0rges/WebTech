@@ -3,6 +3,7 @@
 addEventListener('load',script1start);
 
 var postTemplate;
+var pageDestination;
 
 function script1start(){
   initButton();
@@ -27,6 +28,7 @@ function newPost() {
   function c(template){
     var resultArea = document.querySelector("#results-area");
     resultArea.innerHTML= template;
+    document.querySelector("#postLocation").value = pageDestination;
   }
 }
 
@@ -103,7 +105,8 @@ function startPosts() {
     for (var i=0; i<defs.length; i++) {
         defs[i] = defs[i].split("=");
     }
-    setTitleDestination(defs[0][1]);
+    pageDestination = defs[0][1];
+    setTitleDestination(pageDestination);
     loadPosts(defs[0][1]);
 }
 
