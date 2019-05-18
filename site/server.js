@@ -25,9 +25,10 @@ const { parseMultipart } = require("./multipart.js");
 let http = require("http");
 let fs = require("fs");
 const { parse } = require('querystring');
-// include my database functionality
+
+// Include database functionality
 let database = require("./db/dbqueries")
-let OK = 200, NotFound = 404, BadType = 415, Error = 500;
+let OK = 200, NotFound = 404, BadType = 415, Error = 500, InvalidRequest = 400;
 let types, banned;
 
 start();
@@ -43,7 +44,7 @@ async function start() {
     let address = "http://localhost";
     if (port != 80) address = address + ":" + port;
     console.log("Server running at", address);
-    // start the database
+    // Start the database
     try {
       await database.openDB("./db/db.sqlite");
     } catch (e) {
@@ -89,6 +90,9 @@ async function handle(request, response) {
       }
       else if (contentType == 'multipart/form-data'){
         handleMultipart(request, response);
+      }
+      else if (contentType == 'application/json'){
+        // Make a POST request?
       }
       else {
         console.log(request.headers);

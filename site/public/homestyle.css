@@ -1,5 +1,5 @@
 body {
-  background-image: url("images/venice-boats.png");
+  /*background-image: url("images/venice-boats.png");*/
   height: 100%;
   background-position: 50% 40%;
   background-repeat: no-repeat;
@@ -14,12 +14,12 @@ input.search {
   font-size: 1.2em;
   text-indent: 1em;
   border-radius: 1em;
-  border-color: #909090;
+  border-color: #f0d23cff;
   border-style: solid;
   outline: none;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: #E7ECEF;
  }
-h1 { color: white; font-size: 3em; }
+h1 { color: #E7ECEF; font-size: 3em; }
 .center {
   position: absolute;
   top: 25%;

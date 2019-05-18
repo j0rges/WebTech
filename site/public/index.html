@@ -1,20 +1,48 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
+  <link rel="stylesheet" href="dropdownstyle.css"/>
   <link rel="stylesheet" href="homestyle.css"/>
   <link rel="stylesheet" href="header.css"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta name="keywords" content="travelling, advice"/>
 </head>
+
 <header>
-  <a href="/">Home</a>
+  <!-- <a href="/">Sign-In/Up</a>
+  <a href="/">About Us</a>
+  <a href="/">Destinations</a>
+  <a href="/">Home</a> -->
+  <div class="navbar">
+    <img src="images/logo_sailboat.svg" alt="Odyssia Logo" width="100" height="100"/>
+    <a href="#signup_in">Sign-in/up</a>
+    <a href="#about">About</a>
+    <div class="dropdown">
+      <button class="dropbtn">Destinations 
+        <i class="fa fa-caret-down"></i>
+      </button>
+      <div class="dropdown-content">
+        <a href="#">Top</a>
+        <a href="#">Europe</a>
+        <a href="#">U.S.</a>
+        <a href="#">Asia</a>
+        <a href="#">Africa</a>
+        <a href="#">Australia</a>
+      </div>
+    </div> 
+    <a href="#home">Home</a>
+  </div>
+  <!-- <img src="images/logo_sailboat.svg" alt="Odyssia Logo" style="width:64px;height:64px;"/> -->
 </header>
+
 <body>
   <div class="center">
     <h1>Where are you <br/>going?</h1>
     <form action="search/" method="get">
-      <input type="text" name="search" placeholder="Explore..." class="search"/>
+      <input type="text" name="search" placeholder="Explore.." class="search"/>
     </form>
   </div>
 </body>
+
 </html>
