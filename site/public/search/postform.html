@@ -1,0 +1,29 @@
+<!--DOCTYPE html-->
+<!--html xmlns="http://www.w3.org/1999/xhtml"-->
+
+<head>
+  <link rel="stylesheet" href="../header.css"/>
+  <link rel="stylesheet" href="/searchresults.css"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="keywords" content="travelling, advice"/>
+  <script src="../scripts/post.js"></script>
+</head>
+
+<body>
+  <section class="search-result">
+    <form class="" action="post" method="post">
+      <input type="text" name="title" placeholder="Title"/>
+      <!-- This will be replaced by cookies for sessions, once users is implemented.-->
+      <input type="hidden" name="username" value="anonymous"/>
+      <input type="hidden" name="location" value="unknown"/>
+      <br/>
+        <textarea name="content" placeholder="write here what you want to recommend..."></textarea>
+        <br/>
+        Select an image: <input type="file" name="image" id="imageload"/>
+        <br/>
+      <input type="submit" value="Submit" />
+    </form>
+  </section>
+  <!--button type="button" name="button" id="loadButton">test the function.</button-->
+</body>
+<!--/html-->
