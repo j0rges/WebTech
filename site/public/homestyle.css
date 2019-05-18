@@ -14,7 +14,7 @@ input.search {
   font-size: 1.2em;
   text-indent: 1em;
   border-radius: 1em;
-  border-color: #f0d23cff;
+  border-color: #86BBD8;
   border-style: solid;
   outline: none;
   background-color: #E7ECEF;
@@ -25,4 +25,5 @@ h1 { color: #E7ECEF; font-size: 3em; }
   top: 25%;
   width: 100%;
   text-align: center;
+  text-shadow: -1px 0 #86BBD8, 0 1px #86BBD8, 1px 0 #86BBD8, 0 -1px #86BBD8;
 }
