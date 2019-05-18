@@ -1,5 +1,5 @@
 .button {
-  background-color: #86BBD8;
+  background-color: #1EA8CD;
   border: none;
   color: white;
   padding: 15px 32px;
@@ -17,12 +17,12 @@
 
 .buttonHomeCreatePost {
   background-color: white; 
-  color: #86BBD8; 
-  border: 2px solid #86BBD8;
+  color: #1EA8CD; 
+  border: 2px solid #1EA8CD;
 }
 
 .buttonHomeCreatePost:hover {
-  background-color: #86BBD8;
-  color: #f0d23cff;
+  background-color: #1EA8CD;
+  color: #f0d23c;
   box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
 }

@@ -6,7 +6,7 @@
 .navbar a {
   float: right;
   font-size: 24px;
-  color: #f0d23cff;
+  color: #1EA8CD;
   text-align: center;
   padding: 40px 25px 37px;
   text-decoration: none;
@@ -21,7 +21,7 @@
   font-size: 24px;  
   border: none;
   outline: none;
-  color: #f0d23cff;
+  color: #1EA8CD;
   padding: 40px 25px 37px;
   background-color: inherit;
   font-family: inherit;
@@ -29,7 +29,8 @@
 }
 
 .navbar a:hover, .dropdown:hover .dropbtn {
-  background-color: #86BBD8;
+  background-color: #1EA8CD;
+  color: #f0d23c;
 }
 
 .dropdown-content {
@@ -43,7 +44,7 @@
 
 .dropdown-content a {
   float: none;
-  color: #86BBD8;
+  color: #1EA8CD;
   font-size: 16px;
   padding: 12px 16px;
   text-decoration: none;
@@ -52,7 +53,8 @@
 }
 
 .dropdown-content a:hover {
-  background-color: #f0d23cff;
+  background-color: #1EA8CD;
+  color: #f0d23c;
 }
 
 .dropdown:hover .dropdown-content {
