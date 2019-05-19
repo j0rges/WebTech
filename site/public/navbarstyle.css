@@ -6,6 +6,7 @@
 .navbar a {
   float: right;
   font-size: 24px;
+  font-family: Georgia, 'Times New Roman', Times, serif;
   color: #1EA8CD;
   text-align: center;
   padding: 40px 25px 37px;
@@ -24,7 +25,7 @@
   color: #1EA8CD;
   padding: 40px 25px 37px;
   background-color: inherit;
-  font-family: inherit;
+  font-family: Georgia, 'Times New Roman', Times, serif;
   margin: 0;
 }
 
@@ -46,6 +47,7 @@
   float: none;
   color: #1EA8CD;
   font-size: 16px;
+  font-family: Georgia, 'Times New Roman', Times, serif;
   padding: 12px 16px;
   text-decoration: none;
   display: block;

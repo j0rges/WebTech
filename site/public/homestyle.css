@@ -20,7 +20,11 @@ input.search {
   background-color: #E7ECEF;
  }
 
-h1 { color: #E7ECEF; font-size: 3em; }
+h1 { 
+  color: #E7ECEF; 
+  font-size: 3em; 
+  font-family: Georgia, 'Times New Roman', Times, serif;
+}
 
 .center {
   position: absolute;
@@ -36,5 +40,6 @@ footer {
   padding: 10px;
   text-align: center;
   font-size: 0.8em;
+  font-family: Georgia, 'Times New Roman', Times, serif;
   color: #86BBD8;
 }

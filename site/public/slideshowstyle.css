@@ -45,6 +45,7 @@ img {vertical-align: middle;}
 .text {
   color: #E7ECEF;
   font-size: 15px;
+  font-family: Georgia, 'Times New Roman', Times, serif;
   padding: 8px 12px;
   position: absolute;
   bottom: 8px;
@@ -56,6 +57,7 @@ img {vertical-align: middle;}
 .numbertext {
   color: #E7ECEF;
   font-size: 12px;
+  font-family: Georgia, 'Times New Roman', Times, serif;
   padding: 8px 12px;
   position: absolute;
   top: 0;
