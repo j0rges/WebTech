@@ -14,15 +14,32 @@ input.search {
   font-size: 1.2em;
   text-indent: 1em;
   border-radius: 1em;
-  border-color: #f0d23cff;
+  border-color: #9DA3A4;
   border-style: solid;
   outline: none;
   background-color: #E7ECEF;
  }
-h1 { color: #E7ECEF; font-size: 3em; }
+
+h1 { 
+  color: #E7ECEF; 
+  font-size: 3em; 
+  font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
 .center {
   position: absolute;
   top: 25%;
   width: 100%;
   text-align: center;
+  text-shadow: -1px 0 #9DA3A4, 0 1px #9DA3A4, 1px 0 #9DA3A4, 0 -1px #9DA3A4;
+}
+
+/* Style the footer */
+footer {
+  background-color: #E7ECEF;
+  padding: 10px;
+  text-align: center;
+  font-size: 0.8em;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  color: #86BBD8;
 }

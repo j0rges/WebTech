@@ -5,12 +5,13 @@ header {
 header a {
   float: right;
   display: block;
-  color: #f0d23cff;
+  color: #1EA8CD;
   text-align: center;
   padding: 1em 2em;
   font-size: 1.5em;
   text-decoration: none;
 }
 header a:hover {
-  background-color: #86BBD8;
+  background-color: #1EA8CD;
+  color: #f0d23c;
 }

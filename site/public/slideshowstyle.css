@@ -1,6 +1,8 @@
 * {box-sizing: border-box}
-body {font-family: Verdana, sans-serif; margin:0}
-.mySlides {display: none}
+body {
+    font-family: Verdana, sans-serif; 
+    margin:0}
+
 img {vertical-align: middle;}
 
 /* Slideshow container */
@@ -9,6 +11,8 @@ img {vertical-align: middle;}
   position: relative;
   margin: auto;
 }
+
+/* .mySlides {display: none} */
 
 /* Next & previous buttons */
 .prev, .next {
@@ -39,8 +43,9 @@ img {vertical-align: middle;}
 
 /* Caption text */
 .text {
-  color: #f0d23cff;
+  color: #E7ECEF;
   font-size: 15px;
+  font-family: Georgia, 'Times New Roman', Times, serif;
   padding: 8px 12px;
   position: absolute;
   bottom: 8px;
@@ -50,8 +55,9 @@ img {vertical-align: middle;}
 
 /* Number text (1/3 etc) */
 .numbertext {
-  color: #f0d23cff;
+  color: #E7ECEF;
   font-size: 12px;
+  font-family: Georgia, 'Times New Roman', Times, serif;
   padding: 8px 12px;
   position: absolute;
   top: 0;
@@ -60,8 +66,8 @@ img {vertical-align: middle;}
 /* The dots/bullets/indicators */
 .dot {
   cursor: pointer;
-  height: 15px;
-  width: 15px;
+  height: 8px;
+  width: 8px;
   margin: 0 2px;
   background-color: #bbb;
   border-radius: 50%;
