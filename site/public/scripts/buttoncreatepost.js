@@ -7,7 +7,7 @@ function initButton() {
 
 function newPost() {
   // Change the results for the new post form.
-  getTemplate("/search/postform.html",c);
+  getTemplate("../search/postform.html",c);
   function c(template){
     var resultArea = document.querySelector("#results-area");
     resultArea.innerHTML= template;
