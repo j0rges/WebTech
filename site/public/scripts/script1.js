@@ -42,9 +42,11 @@ function loadPosts(destination){
   dataRequest.send();
   function deal(){
     if (this.readyState != XMLHttpRequest.DONE) return;
-    postData = JSON.parse(this.responseText)[0];
+    postData = JSON.parse(this.responseText);
     if (postData != undefined){
-      appendSearchResult(postData,postTemplate);
+      for(var i = 0; i < postData.length; i++){
+        appendSearchResult(postData[i],postTemplate);
+      }
     }
     else {
       var apologisingText = document.createElement("p");
@@ -87,7 +89,7 @@ function appendSearchResult(postData, template){
   var imageTag = "#image";
   var imageId = "imagePath";
   var imageElem = result.querySelector(imageTag);
-  if (postData[imageId] == ''){
+  if (postData[imageId] == '' || postData[imageId] == null){
     imageElem.style.display = 'none';
   }else {
     imageElem.setAttribute("src","postData[imageId]");

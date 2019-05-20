@@ -78,17 +78,23 @@ async function handle(request, response) {
         contentType = request.headers["content-type"].split(";")[0];
 
         if (contentType == 'application/x-www-form-urlencoded') {
-          let body = '';
-          request.on('data', add);
-          function add(chunk) {body += chunk.toString();}
-          request.on('end', endStuff);
-          function endStuff(){
-            body = parse(body);
-            console.log(body);
-            response.writeHead(SeeOther,
-                               {location: '/search/?search=' + body.location})
-            response.end();
+          let promisedBody = new Promise(getBody);
+          let body = await promisedBody;
+          function getBody(resolve,reject){
+            let body = '';
+            request.on('data', add);
+            function add(chunk) {body += chunk.toString();}
+            request.on('end', endStuff);
+            function endStuff(){
+              body = parse(body);
+              resolve(body);
+            }
           }
+          console.log(body);
+          newPost(body);
+          response.writeHead(SeeOther,
+                             {location: '/search/?search=' + body.location})
+          response.end();
         }
         else if (contentType == 'multipart/form-data'){
           handleMultipart(request, response);
@@ -189,8 +195,8 @@ function handleMultipart(request, response) {
   }
 }
 
-async function newPost(request, response) {
-
+async function newPost(body) {
+  await database.insertPost(body);
 }
 
 
