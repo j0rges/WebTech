@@ -100,7 +100,14 @@ async function handle(request, response) {
           handleMultipart(request, response);
         }
         else if (contentType == 'application/json'){
-          // Make a POST request?
+          // Parse body into a json object
+          // let res = parse(request.body);
+          // if(url === "[...]/signup"){
+          //   //check if res has the correct format eg email, password and username in the object.
+          //   database.newUser(res.email, res.password, res.username);
+          // }
+          // Check if url is right eg. "[...]/signup"
+          // database.newUser insert user
         }
         else {
           console.log(request.headers);

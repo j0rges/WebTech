@@ -1,6 +1,6 @@
 "use strict";
 
-addNavBar();
+addEventListener('load',addNavBar);
 
 function addNavBar() {
   var adrr = "/navbar.html"

@@ -7,7 +7,7 @@ async function create() {
         db = await sqlite.open("./db.sqlite");
         await db.run("pragma foreign_keys = on");
 
-        await db.run("create table users (username primary key, email, password, name)");
+        await db.run("create table users (username primary key, email, password, username)");
         await db.run("create table destinations (locationID integer primary key, location)");
         await db.run("create table posts (postID integer primary key, locationID, username, title, text, imagePath," +
                      "foreign key(locationID) references destinations(locationID), " +
