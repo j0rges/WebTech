@@ -28,7 +28,7 @@ const { parse } = require('querystring');
 
 // Include database functionality
 let database = require("./db/dbqueries")
-let OK = 200, NotFound = 404, BadType = 415, Error = 500, InvalidRequest = 400;
+let OK = 200, NotFound = 404, BadType = 415, Error = 500, InvalidRequest = 400, SeeOther = 303;
 let types, banned;
 
 start();
@@ -72,63 +72,68 @@ async function handle(request, response) {
   let arraySplit = splitUrl.split('/');
   let keyWord = arraySplit[arraySplit.length -1];
 
+  try{
+    switch (request.method.toLowerCase()) {
+      case "post":
+        contentType = request.headers["content-type"].split(";")[0];
 
-  switch (request.method.toLowerCase()) {
-    case "post":
-      contentType = request.headers["content-type"].split(";")[0];
+        if (contentType == 'application/x-www-form-urlencoded') {
+          let body = '';
+          request.on('data', add);
+          function add(chunk) {body += chunk.toString();}
+          request.on('end', endStuff);
+          function endStuff(){
+            body = parse(body);
+            console.log(body);
+            response.writeHead(SeeOther,
+                               {location: '/search/?search=' + body.location})
+            response.end();
+          }
+        }
+        else if (contentType == 'multipart/form-data'){
+          handleMultipart(request, response);
+        }
+        else if (contentType == 'application/json'){
+          // Make a POST request?
+        }
+        else {
+          console.log(request.headers);
+          fail(response, BadType, "Content type not supported");
+        }
+        break;
 
-      if (contentType == 'application/x-www-form-urlencoded') {
+      case "get":
+        // Make a dicision about what kind of url in coming in
+        if(keyWord == 'data'){
+          await handleDataRequest(request, response);
+        }
+        else {
+          handleFileRequest(request, response, splitUrl);
+        }
+        break;
+
+      case "put":
+        console.log(url);
         let body = '';
         request.on('data', add);
         function add(chunk) {body += chunk.toString();}
         request.on('end', endStuff);
-        function endStuff(){
-          body = parse(body);
-          console.log(body);
+        function endStuff(){o
+          fs.writeFile("newimage.jpg", body, function (err) {
+            if (err) throw err;
+            console.log('Saved!');
+          });
           response.end('ok');
         }
-      }
-      else if (contentType == 'multipart/form-data'){
-        handleMultipart(request, response);
-      }
-      else if (contentType == 'application/json'){
-        // Make a POST request?
-      }
-      else {
-        console.log(request.headers);
-        fail(response, BadType, "Content type not supported");
-      }
-      break;
+        break;
 
-    case "get":
-      // Make a dicision about what kind of url in coming in
-      if(keyWord == 'data'){
-        await handleDataRequest(request, response);
-      }
-      else {
-        handleFileRequest(request, response, splitUrl);
-      }
-      break;
-
-    case "put":
-      console.log(url);
-      let body = '';
-      request.on('data', add);
-      function add(chunk) {body += chunk.toString();}
-      request.on('end', endStuff);
-      function endStuff(){o
-        fs.writeFile("newimage.jpg", body, function (err) {
-          if (err) throw err;
-          console.log('Saved!');
-        });
-        response.end('ok');
-      }
-      break;
-
-    default:
-      fail(response, BadType, "Request method not supported by the server.");
+      default:
+        fail(response, BadType, "Request method not supported by the server.");
+    }
+  } catch (e) {
+    console.log(e);
+    fail(response, Error, "Couldn't solve the request.")
   }
-
 }
 
 // Serve a request by delivering data from the database.
@@ -184,6 +189,9 @@ function handleMultipart(request, response) {
   }
 }
 
+async function newPost(request, response) {
+
+}
 
 
 function getQuery(url) {
