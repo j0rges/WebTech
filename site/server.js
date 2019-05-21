@@ -117,11 +117,11 @@ async function handle(request, response) {
             }
             
             console.log(body);
-            console.log(body.email, body.password, body.username);
+            console.log(body.username, body.password, body.email);
             // Check if res has the correct format eg email, password and username in the object.
             // await database.insertUser(body.email, body.password, body.username);
             userinfo = await database.insertUser(body.username, body.email, body.password);
-            deliver(response,types["json"],false,JSON.stringify(userinfo));
+            response.end('user successfully created');
           }
         }
         else {
