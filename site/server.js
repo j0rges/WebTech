@@ -100,14 +100,29 @@ async function handle(request, response) {
           handleMultipart(request, response);
         }
         else if (contentType == 'application/json'){
-          // Parse body into a json object
-          // let res = parse(request.body);
-          // if(url === "[...]/signup"){
-          //   //check if res has the correct format eg email, password and username in the object.
-          //   database.newUser(res.email, res.password, res.username);
-          // }
-          // Check if url is right eg. "[...]/signup"
-          // database.newUser insert user
+          console.log("signup functionality");
+          // Check if url is ending like "/signup"
+          if (arraySplit[arraySplit.length - 1] == "signup"){
+            let promisedBody = new Promise(getBody);
+            let body = await promisedBody;
+            function getBody(resolve,reject){
+              let body = '';
+              request.on('data', add);
+              function add(chunk) {body += chunk.toString();}
+              request.on('end', endStuff);
+              function endStuff(){
+                body = JSON.parse(body);
+                resolve(body);
+              }
+            }
+            
+            console.log(body);
+            console.log(body.email, body.password, body.username);
+            // Check if res has the correct format eg email, password and username in the object.
+            // await database.insertUser(body.email, body.password, body.username);
+            userinfo = await database.insertUser(body.username, body.email, body.password);
+            deliver(response,types["json"],false,JSON.stringify(userinfo));
+          }
         }
         else {
           console.log(request.headers);
@@ -205,7 +220,6 @@ function handleMultipart(request, response) {
 async function newPost(body) {
   await database.insertPost(body);
 }
-
 
 function getQuery(url) {
   // Split url at ?
