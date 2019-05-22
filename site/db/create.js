@@ -17,8 +17,8 @@ async function create() {
         await db.run("insert into destinations values (2,'Bristol')");
         await db.run("insert into destinations values (3,'Madrid')");
 
-        await db.run("insert into users values ('KonstantinaPs','fakeEmail','password')");
-        await db.run("insert into users values ('JorgeSc','otherfakeEmail','otherpassword')");
+        // await db.run("insert into users values ('KonstantinaPs','fakeEmail','password')");
+        // await db.run("insert into users values ('JorgeSc','otherfakeEmail','otherpassword')");
 
         await db.run("insert into posts values (1,1,'KonstantinaPs','Summer in Athens','Really hot at summer time but really beautiful as well.','')");
         await db.run("insert into posts values (2,3,'JorgeSc','An afternoon in Madrid','I recommend going to the Retiro to have a nice afternoon outside.', '/images/alev-takil.png')");

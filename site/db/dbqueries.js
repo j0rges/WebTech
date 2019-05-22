@@ -46,11 +46,9 @@ async function GetPostsByDestination(destination){
   return r;
 }
 
-// add a new user to the profiles table.
+// Add a new user to the profiles table.
 async function insertUser(username, email, password) {
-  try {
-    await db.run("INSERT into users values (?,?,?)", username, email, password);
-  } catch (e) {console.log(e);}
+  return await db.run("INSERT into users values (?,?,?)", [username, email, password]);
 }
 
 async function insertPost(body){

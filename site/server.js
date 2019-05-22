@@ -100,7 +100,7 @@ async function handle(request, response) {
           handleMultipart(request, response);
         }
         else if (contentType == 'application/json'){
-          console.log("signup functionality");
+          // console.log("signup functionality");
           // Check if url is ending like "/signup"
           if (arraySplit[arraySplit.length - 1] == "signup"){
             let promisedBody = new Promise(getBody);
@@ -130,9 +130,14 @@ async function handle(request, response) {
             }
             
             console.log(body.username, body.password, body.email);
-            userinfo = await database.insertUser(body.username, body.email, body.password);
-            console.log(userinfo);
-            response.end('user successfully created');
+            try{
+              await database.insertUser(body.username, body.email, body.password);
+              response.writeHead(OK, { "Content-Type": "text/plain" });
+              response.end('User successfully created');
+            } catch(e){
+              response.writeHead(InvalidRequest, { "Content-Type": "text/plain" });
+              response.end(e.message);
+            }
           }
         }
         else {
