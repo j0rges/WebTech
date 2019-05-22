@@ -9,6 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="keywords" content="travelling, advice"/>
     <script src="/scripts/addnavbar.js"></script>
+    <script src="/scripts/signup.js"></script>
 </head>
 
 <body>
@@ -17,7 +18,8 @@
     
     <div style="text-align:center;">
         <section class="search-result">
-            <form>
+            <form id="signupform">
+                <h4>Please fill in this form to create an account.</h4>
                 <h4>Select a  username:</h4>
                 <input type="text" name="username" placeholder="Username"/>
                 <!-- This will be replaced by cookies for sessions, once users are implemented.-->
@@ -27,7 +29,7 @@
                 <input type="text" name="password" placeholder="Password"/>
                 <br/>
                 <!-- <button type="button" name="signup" id="signupButton">Sign-up!</button> -->
-                <button class="button buttonSignup" onclick="insertUser()">Sign-up!</button>
+                <button class="button buttonSignup" onclick="sendUser()">Sign-up!</button>
             </form>
         </section>
     </div>

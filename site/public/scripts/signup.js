@@ -1,21 +1,14 @@
 "use strict";
 
-function poststart() {
-  const b = document.querySelector("#loadButton");
-  b.addEventListener("click",sendUser);
-}
-
-function sendUser(){
-  var reader = new FileReader();
-  var file = document.getElementById('imageload').files[0];
-  if(!file) console.log("error no file chosen");
+function sendUser() {
+  console.log("In function sendUser");
   var request = new XMLHttpRequest();
-  var url = "/put/" + file.name;
-  request.open("put",url);
-
-  reader.onload = function(event){
-    console.log("here");
-    request.send(event.target.result);
+  request.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      document.getElementById("signupform").innerHTML = this.responseText;
+    }
   };
-  reader.readAsDataURL(file);
+  var url = "/post/signup";
+  request.open("POST", url);
+  request.send();
 }
