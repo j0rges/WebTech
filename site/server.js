@@ -20,7 +20,7 @@ let verbose = true;
 // Load the library modules, and define the global constants.
 // See http://en.wikipedia.org/wiki/List_of_HTTP_status_codes.
 // Start the server:
-
+const joi = require("joi"); //for validating request body
 const { parseMultipart } = require("./multipart.js");
 let http = require("http");
 let fs = require("fs");
@@ -116,11 +116,22 @@ async function handle(request, response) {
               }
             }
             
-            console.log(body);
-            console.log(body.username, body.password, body.email);
             // Check if res has the correct format eg email, password and username in the object.
-            // await database.insertUser(body.email, body.password, body.username);
+
+            const schema = {
+              username: joi.string().required(),
+              email: joi.string().email().required(),
+              password: joi.string().min(5).required()
+            }
+            var result = joi.validate(body, schema);
+            if (result.error){
+              response.end(result.error.details[0].message);
+              return;
+            }
+            
+            console.log(body.username, body.password, body.email);
             userinfo = await database.insertUser(body.username, body.email, body.password);
+            console.log(userinfo);
             response.end('user successfully created');
           }
         }
