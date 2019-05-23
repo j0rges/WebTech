@@ -7,22 +7,26 @@ function sendUser() {
     if (this.readyState == 4) {
       if (this.status == 200){
          //Change page to succesfully signed up
-         this.responseText
+         console.log(this.responseText());
+        //  this.responseText()
       }
       else {
         //Get response
+        console.log(this.responseText());
       }
     }
   };
-  var bodysend = {
-    username: document.getElementById(),
-    email: ,
-    password: 
+  var user = {
+    "username": document.getElementById(username),
+    "email": document.getElementById(email),
+    "password": document.getElementById(password)
   }
   // Convert to json format
-  var url = "/post/signup";
-  request.open("POST", url);
-  //request.send(body);
+  //user = JSON.parse(user);
+  console.log(user);
+  var url = "/signup";
+  request.open("POST", url, true);
+  request.send(user);
 }
 
 

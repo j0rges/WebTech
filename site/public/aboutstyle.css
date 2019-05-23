@@ -6,6 +6,11 @@ body {
     min-width: 400px;
 }
 
+p{
+    font-size: 1em; 
+    color: black;
+}
+
 h1 { 
     color: #1EA8CD; 
     font-size: 3em; 
