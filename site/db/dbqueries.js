@@ -39,20 +39,16 @@ async function logPosts() {
 async function GetPostsByDestination(destination){
   let r;
   try{
-
     let sql = "SELECT * FROM posts JOIN destinations using (locationID) WHERE location = ?";
     r = await db.all(sql,[destination]);
-
   }catch (e) { console.log(e); }
 
   return r;
 }
 
-// add a new user to the profiles table.
-async function newUser(username,name) {
-  try {
-    await db.run("INSERT into profiles values (?,?)",[username,name]);
-  } catch (e) {console.log(e);}
+// Add a new user to the profiles table.
+async function insertUser(username, email, password) {
+  return await db.run("INSERT into users values (?,?,?)", [username, email, password]);
 }
 
 async function insertPost(body){
@@ -64,8 +60,8 @@ async function insertPost(body){
     if (locationID == undefined) {
       let ans = await db.run("insert into destinations (location) values (?)",place);
       locationID = ans.lastId;
-
-    } else {
+    } 
+    else {
       locationID = locationID.locationID;
     }
     await db.run("insert into posts (locationID,username,title,text,imagePath) values (?,?,?,?,?)",locationID,body.username,body.title,body.content);
@@ -83,5 +79,6 @@ module.exports = {
   openDB : openDB,
   closeDB : closeDB,
   GetPostsByDestination : GetPostsByDestination,
-  insertPost : insertPost
+  insertPost : insertPost,
+  insertUser : insertUser
 };

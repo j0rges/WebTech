@@ -20,7 +20,7 @@ let verbose = true;
 // Load the library modules, and define the global constants.
 // See http://en.wikipedia.org/wiki/List_of_HTTP_status_codes.
 // Start the server:
-
+const joi = require("joi"); //for validating request body
 const { parseMultipart } = require("./multipart.js");
 let http = require("http");
 let fs = require("fs");
@@ -100,7 +100,45 @@ async function handle(request, response) {
           handleMultipart(request, response);
         }
         else if (contentType == 'application/json'){
-          // Make a POST request?
+          // console.log("signup functionality");
+          // Check if url is ending like "/signup"
+          if (arraySplit[arraySplit.length - 1] == "signup"){
+            let promisedBody = new Promise(getBody);
+            let body = await promisedBody;
+            function getBody(resolve,reject){
+              let body = '';
+              request.on('data', add);
+              function add(chunk) {body += chunk.toString();}
+              request.on('end', endStuff);
+              function endStuff(){
+                body = JSON.parse(body);
+                resolve(body);
+              }
+            }
+            
+            // Check if res has the correct format eg email, password and username in the object.
+
+            const schema = {
+              username: joi.string().required(),
+              email: joi.string().email().required(),
+              password: joi.string().min(5).required()
+            }
+            var result = joi.validate(body, schema);
+            if (result.error){
+              response.end(result.error.details[0].message);
+              return;
+            }
+            
+            console.log(body.username, body.password, body.email);
+            try{
+              await database.insertUser(body.username, body.email, body.password);
+              response.writeHead(OK, { "Content-Type": "text/plain" });
+              response.end('User successfully created');
+            } catch(e){
+              response.writeHead(InvalidRequest, { "Content-Type": "text/plain" });
+              response.end(e.message);
+            }
+          }
         }
         else {
           console.log(request.headers);
@@ -198,7 +236,6 @@ function handleMultipart(request, response) {
 async function newPost(body) {
   await database.insertPost(body);
 }
-
 
 function getQuery(url) {
   // Split url at ?
