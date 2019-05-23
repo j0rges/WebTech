@@ -80,7 +80,6 @@ async function handle(request, response) {
         if (contentType == 'application/x-www-form-urlencoded') {
           // Check if url is ending like "/signup"
           if (arraySplit[arraySplit.length - 1] == "signup"){
-            console.log("signup functionality1");
             let promisedBody = new Promise(getBody);
             let body = await promisedBody;
             function getBody(resolve,reject){
@@ -139,44 +138,43 @@ async function handle(request, response) {
         else if (contentType == 'multipart/form-data'){
           handleMultipart(request, response);
         }
-        else if (contentType == 'application/json'){
-          console.log("signup functionality2");
-          // Check if url is ending like "/signup"
-          if (arraySplit[arraySplit.length - 1] == "signup"){
-            let promisedBody = new Promise(getBody);
-            let body = await promisedBody;
-            function getBody(resolve,reject){
-              let body = '';
-              request.on('data', add);
-              function add(chunk) {body += chunk.toString();}
-              request.on('end', endStuff);
-              function endStuff(){
-                body = JSON.parse(body);
-                resolve(body);
-              }
-            }
-            // Check if res has the correct format eg email, password and username in the object.
-            const schema = {
-              username: joi.string().required(),
-              email: joi.string().email().required(),
-              password: joi.string().min(5).required()
-            }
-            var result = joi.validate(body, schema);
-            if (result.error){
-              response.end(result.error.details[0].message);
-              return;
-            }
-            console.log(body.username, body.password, body.email);
-            try{
-              await database.insertUser(body.username, body.email, body.password);
-              response.writeHead(OK, { "Content-Type": "text/plain" });
-              response.end('User successfully created');
-            } catch(e){
-              response.writeHead(InvalidRequest, { "Content-Type": "text/plain" });
-              response.end(e.message);
-            }
-          }
-        }
+        // else if (contentType == 'application/json'){
+        //   // Check if url is ending like "/signup"
+        //   if (arraySplit[arraySplit.length - 1] == "signup"){
+        //     let promisedBody = new Promise(getBody);
+        //     let body = await promisedBody;
+        //     function getBody(resolve,reject){
+        //       let body = '';
+        //       request.on('data', add);
+        //       function add(chunk) {body += chunk.toString();}
+        //       request.on('end', endStuff);
+        //       function endStuff(){
+        //         body = JSON.parse(body);
+        //         resolve(body);
+        //       }
+        //     }
+        //     // Check if res has the correct format eg email, password and username in the object.
+        //     const schema = {
+        //       username: joi.string().required(),
+        //       email: joi.string().email().required(),
+        //       password: joi.string().min(5).required()
+        //     }
+        //     var result = joi.validate(body, schema);
+        //     if (result.error){
+        //       response.end(result.error.details[0].message);
+        //       return;
+        //     }
+        //     console.log(body.username, body.password, body.email);
+        //     try{
+        //       await database.insertUser(body.username, body.email, body.password);
+        //       response.writeHead(OK, { "Content-Type": "text/plain" });
+        //       response.end('User successfully created');
+        //     } catch(e){
+        //       response.writeHead(InvalidRequest, { "Content-Type": "text/plain" });
+        //       response.end(e.message);
+        //     }
+        //   }
+        // }
         else {
           console.log(request.headers);
           fail(response, BadType, "Content type not supported");

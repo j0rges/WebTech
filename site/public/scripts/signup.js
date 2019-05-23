@@ -1,3 +1,5 @@
+// File is not in use..
+
 "use strict";
 
 function sendUser() {
@@ -28,5 +30,3 @@ function sendUser() {
   request.open("POST", url, true);
   request.send(user);
 }
-
-
