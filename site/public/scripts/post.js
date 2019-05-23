@@ -10,15 +10,16 @@ function poststart() {
 }
 
 function sendImage(){
-  var reader = new FileReader();
+  //var reader = new FileReader();
   var file = document.getElementById('imageload').files[0];
   var request = new XMLHttpRequest();
   var url = "/put/" + file.name;
   request.open("put",url);
+  request.send(file);
 
-  reader.onload = function(event){
+  /*reader.onload = function(event){
     console.log("here");
     request.send(event.target.result);
   };
-  reader.readAsDataURL(file);
+  reader.readAsDataURL(file);*/
 }

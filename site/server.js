@@ -124,7 +124,7 @@ async function handle(request, response) {
         request.on('data', add);
         function add(chunk) {body += chunk.toString();}
         request.on('end', endStuff);
-        function endStuff(){o
+        function endStuff(){
           fs.writeFile("newimage.jpg", body, function (err) {
             if (err) throw err;
             console.log('Saved!');
