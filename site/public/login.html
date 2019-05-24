@@ -17,17 +17,18 @@
     
     <div style="text-align:center;">
         <section class="search-result">
-            <form>
+            <form id="loginform" action="/login" target="_blank" method="GET" class="loginform">
                 <label>Email:</label>
                 <br/>
-                <input type="text" name="email" placeholder="Email"/>
+                <input class="inputBox" type="text" name="email" placeholder="Email"/>
                 <br/>
                 <label>Password:</label>
                 <br/>
-                <input type="text" name="password" placeholder="Password"/>
+                <input class="inputBox" type="text" name="password" placeholder="Password"/>
                 <br/>
                 <!-- <button type="button" name="signup" id="signupButton">Sign-up!</button> -->
-                <button class="button buttonSignup" onclick="getUser()">Log-in!</button>
+                <!-- <button class="button buttonSignup" onclick="getUser()">Log-in!</button> -->
+                <input class="button buttonSignup" type="submit" value="Log-in!"/>
             </form>
         </section>
     </div>

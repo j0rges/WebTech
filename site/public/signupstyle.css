@@ -1,7 +1,5 @@
 * {
   box-sizing: border-box;
-  padding: 5px;
-  margin:10px;
 }
 
 body {
@@ -104,4 +102,9 @@ textarea {
   background-color: #1EA8CD;
   color: #f0d23c;
   box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+}
+
+.inputBox {
+  padding: 5px;
+  margin:10px;
 }
