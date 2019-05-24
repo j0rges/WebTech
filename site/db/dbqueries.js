@@ -51,6 +51,20 @@ async function insertUser(username, email, password) {
   return await db.run("INSERT into users values (?,?,?)", [username, email, password]);
 }
 
+async function getUser(email, password) {
+  let r;
+  try{
+    let sql = "SELECT Username username FROM users WHERE email = ? AND password = ?";
+    r = await db.each(sql,[email, password]);
+  }catch (e) { console.log(e); }
+  console.log(r);
+  return r;
+}
+
+// async function getUser(email, password) {
+//   return await db.run("SELECT Username username FROM users WHERE email = ? AND password = ?");
+// }
+
 async function insertPost(body){
   try {
     let place = body.location;
@@ -80,5 +94,6 @@ module.exports = {
   closeDB : closeDB,
   GetPostsByDestination : GetPostsByDestination,
   insertPost : insertPost,
-  insertUser : insertUser
+  insertUser : insertUser,
+  getUser : getUser
 };
