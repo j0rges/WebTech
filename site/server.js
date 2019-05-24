@@ -141,9 +141,22 @@ async function handle(request, response) {
             }
             console.log(body.email, body.password);
             try{
-              let retrievedUser = await database.getUser(body.email, body.password);
-              response.writeHead(OK, { "Content-Type": "text/plain" });
-              response.end(retrievedUser);
+              let retrievedUser = await database.getUser(body.email);
+              console.log(retrievedUser);
+              if (retrievedUser[0] == null) {
+                response.writeHead(NotFound, { "Content-Type": "text/plain" });
+                response.end("Email does not exist. Please check your email or create an account.");
+              }
+              if (retrievedUser[0].password == body.password){
+                console.log("Hello ", retrievedUser[0].username);
+                response.writeHead(OK, { "Content-Type": "text/plain" });
+                response.end(retrievedUser[0].username);
+              }
+              else {
+                console.log("Unable to authorise. Please try again.");
+                response.writeHead(401, { "Content-Type": "text/plain" });
+                response.end("Unable to authorise. Please try again.");
+              }
             } catch(e){
               response.writeHead(InvalidRequest, { "Content-Type": "text/plain" });
               response.end(e.message);
