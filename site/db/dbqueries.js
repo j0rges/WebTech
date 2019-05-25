@@ -60,11 +60,10 @@ async function insertPost(body){
     let place = body.location;
     place = place[0].toUpperCase() + place.substring(1);
     let locationID = await db.get("SELECT locationID FROM destinations WHERE location = ?",place);
-    console.log("The locationID is:");
     if (locationID == undefined) {
       let ans = await db.run("insert into destinations (location) values (?)",place);
-      locationID = ans.lastId;
-    } 
+      locationID = ans.lastID;
+    }
     else {
       locationID = locationID.locationID;
     }
