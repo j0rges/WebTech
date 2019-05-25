@@ -1,32 +1,32 @@
-// File is not in use..
+Cookies.set("ieat", "true", {expires:1});
 
-"use strict";
+var myCookie = Cookies.get("ieat");
 
-function sendUser() {
-  console.log("In function sendUser");
-  var request = new XMLHttpRequest();
-  request.onreadystatechange = function() {
-    if (this.readyState == 4) {
-      if (this.status == 200){
-         //Change page to succesfully signed up
-         console.log(this.responseText());
-        //  this.responseText()
-      }
-      else {
-        //Get response
-        console.log(this.responseText());
-      }
-    }
-  };
-  var user = {
-    "username": document.getElementById(username),
-    "email": document.getElementById(email),
-    "password": document.getElementById(password)
+var title = document.querySelector("h1");
+
+if(myCookie){
+  console.log("cookie!")
+}
+
+function changeNavbar() {
+  // Change the navigation bar
+  getTemplate("../navbar.html",c);
+  function c(template){
+    var resultArea = document.querySelector("#results-area");
+    resultArea.innerHTML= template;
+    document.querySelector("#postLocation").value = pageDestination;
   }
-  // Convert to json format
-  //user = JSON.parse(user);
-  console.log(user);
-  var url = "/signup";
-  request.open("POST", url, true);
-  request.send(user);
+}
+
+function getTemplate(adrr,callback) {
+  var req = new XMLHttpRequest();
+  req.onreadystatechange = receive;
+  req.open("Get",adrr,true);
+  req.send();
+  var template;
+  function receive(){
+    if (this.readyState != XMLHttpRequest.DONE) return;
+    template = this.responseText;
+    callback(template);
+  }
 }
