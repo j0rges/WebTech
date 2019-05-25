@@ -15,6 +15,7 @@
 // list banned files (with upper case letters) on startup.
 
 let port = 8080;
+let secureport = 4433;
 let verbose = true;
 
 // Load the library modules, and define the global constants.
@@ -23,12 +24,13 @@ let verbose = true;
 const joi = require("joi"); //for validating request body
 const { parseMultipart } = require("./multipart.js");
 let http = require("http");
+let https = require("https");
 let fs = require("fs");
 const { parse } = require('querystring');
 
 // Include database functionality
 let database = require("./db/dbqueries")
-let OK = 200, NotFound = 404, BadType = 415, Error = 500, InvalidRequest = 400, SeeOther = 303;
+let OK = 200, NotFound = 404, BadType = 415, Error = 500, InvalidRequest = 400, Moved = 301, SeeOther = 303;
 let types, banned;
 
 start();
@@ -39,10 +41,19 @@ async function start() {
     types = defineTypes();
     banned = [];
     banUpperCase("./public/", "");
-    let service = http.createServer(handle);
+    let options = {
+      key: fs.readFileSync('key.pem'),
+      cert: fs.readFileSync('cert.pem'),
+      passphrase: 'webtechcoursework'
+    };
+    //start http server
+    let service = http.createServer(redirect2SSH);
     service.listen(port, "localhost");
-    let address = "http://localhost";
-    if (port != 80) address = address + ":" + port;
+    //start https server:
+    let secureService = https.createServer(options,handle);
+    secureService.listen(secureport, "localhost");
+    let address = "https://localhost";
+    if (secureport != 443) address = address + ":" + secureport;
     console.log("Server running at", address);
     // Start the database
     try {
@@ -50,6 +61,13 @@ async function start() {
     } catch (e) {
       console.log(e);
     }
+}
+
+function redirect2SSH(request, response){
+  let url = request.url.toLowerCase();
+  response.writeHead(Moved,
+                     {location: 'https://localhost'+ ":" + secureport + url})
+  response.end();
 }
 
 // Check that the site folder and index page exist.
@@ -182,7 +200,7 @@ async function handle(request, response) {
                              {location: '/search/?search=' + body.location})
           response.end();
           }
-          
+
         }
         else if (contentType == 'multipart/form-data'){
           handleMultipart(request, response);
