@@ -84,6 +84,10 @@ function checkSite() {
 async function handle(request, response) {
   let url = request.url.toLowerCase();
   console.log(url);
+  //validate the url:
+  if(url.indexOf("..") < 0) fail(response, InvalidRequest, "invalid URL.");
+  if(url.indexOf("//") < 0) fail(response, InvalidRequest, "invalid URL.");
+  if(url.indexOf("/.") < 0) fail(response, InvalidRequest, "invalid URL.");
 
   // Manipulate url to extract the keyWord
   let splitUrl = url.split('?')[0];
