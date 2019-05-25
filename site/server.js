@@ -15,7 +15,7 @@
 // list banned files (with upper case letters) on startup.
 
 let port = 8080;
-let secureport = 4433;
+let secureport = 8443;
 let verbose = true;
 
 // Load the library modules, and define the global constants.
@@ -96,7 +96,7 @@ async function handle(request, response) {
         contentType = request.headers["content-type"].split(";")[0];
 
         if (contentType == 'application/x-www-form-urlencoded') {
-          // Check if url is ending like "/signup"
+          // Check if url is ending to "/signup"
           if (arraySplit[arraySplit.length - 1] == "signup"){
             let promisedBody = new Promise(getBody);
             let body = await promisedBody;
@@ -111,7 +111,7 @@ async function handle(request, response) {
                 resolve(body);
               }
             }
-            // Check if res has the correct format eg email, password and username in the object.
+            // Check if body has the correct format eg email, password and username in the object.
             const schema = {
               username: joi.string().required(),
               email: joi.string().email().required(),
