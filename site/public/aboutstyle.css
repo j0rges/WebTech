@@ -6,9 +6,9 @@ body {
     min-width: 400px;
 }
 
-p{
+.writing {
     font-size: 1em; 
-    color: black;
+    color: #E7ECEF;
 }
 
 h1 { 
