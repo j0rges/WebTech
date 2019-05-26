@@ -22,6 +22,7 @@ let verbose = true;
 // See http://en.wikipedia.org/wiki/List_of_HTTP_status_codes.
 // Start the server:
 const joi = require("joi"); //for validating request body
+const bcrypt = require('bcrypt');
 const { parseMultipart } = require("./multipart.js");
 let http = require("http");
 let https = require("https");
@@ -127,14 +128,24 @@ async function handle(request, response) {
               return;
             }
             console.log(body.username, body.password, body.email);
-            try{
-              await database.insertUser(body.username, body.email, body.password);
-              response.writeHead(OK, { "Content-Type": "text/plain" });
-              response.end('User successfully created');
-            } catch(e){
-              response.writeHead(InvalidRequest, { "Content-Type": "text/plain" });
-              response.end(e.message);
-            }
+            // Hash the password before saving it in the database
+            bcrypt.hash(body.password, 10, (err,hash) =>{
+              if(err){
+                response.writeHead(Error, { "Content-Type": "text/plain" });
+                return;
+              } 
+              else {
+                try{
+                  console.log(body.username, body.email, hash);
+                  await database.insertUser(body.username, body.email, hash);
+                  response.writeHead(OK, { "Content-Type": "text/plain" });
+                  response.end('User successfully created');
+                } catch(e){
+                  response.writeHead(InvalidRequest, { "Content-Type": "text/plain" });
+                  response.end(e.message);
+                }
+              }
+            });
           }
           // ----------------------------LOG-IN----------------------------------
           else if (arraySplit[arraySplit.length - 1] == "login"){
