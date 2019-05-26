@@ -85,168 +85,170 @@ async function handle(request, response) {
   let url = request.url.toLowerCase();
   console.log(url);
   //validate the url:
-  if(url.indexOf("..") < 0) fail(response, InvalidRequest, "invalid URL.");
-  if(url.indexOf("//") < 0) fail(response, InvalidRequest, "invalid URL.");
-  if(url.indexOf("/.") < 0) fail(response, InvalidRequest, "invalid URL.");
+  if(url.indexOf("..") > 0) {console.log('here1!');fail(response, InvalidRequest, "invalid URL.");}
+  else if(url.indexOf("//") > 0) {console.log('here2!');fail(response, InvalidRequest, "invalid URL.");}
+  else if(url.indexOf("/.") > 0) {console.log('here3!');fail(response, InvalidRequest, "invalid URL.");}
+  else {
+    // Manipulate url to extract the keyWord
+    let splitUrl = url.split('?')[0];
+    let arraySplit = splitUrl.split('/');
+    let keyWord = arraySplit[arraySplit.length -1];
 
-  // Manipulate url to extract the keyWord
-  let splitUrl = url.split('?')[0];
-  let arraySplit = splitUrl.split('/');
-  let keyWord = arraySplit[arraySplit.length -1];
+    try{
+      switch (request.method.toLowerCase()) {
+        case "post":
+          contentType = request.headers["content-type"].split(";")[0];
 
-  try{
-    switch (request.method.toLowerCase()) {
-      case "post":
-        contentType = request.headers["content-type"].split(";")[0];
-
-        if (contentType == 'application/x-www-form-urlencoded') {
-          // Check if url is ending like "/signup"
-          if (arraySplit[arraySplit.length - 1] == "signup"){
-            let promisedBody = new Promise(getBody);
-            let body = await promisedBody;
-            function getBody(resolve,reject){
-              let body = '';
-              request.on('data', add);
-              function add(chunk) {body += chunk.toString();}
-              request.on('end', endStuff);
-              function endStuff(){
-                body = parse(body);
-                console.log(body);
-                resolve(body);
+          if (contentType == 'application/x-www-form-urlencoded') {
+            // Check if url is ending like "/signup"
+            if (arraySplit[arraySplit.length - 1] == "signup"){
+              let promisedBody = new Promise(getBody);
+              let body = await promisedBody;
+              function getBody(resolve,reject){
+                let body = '';
+                request.on('data', add);
+                function add(chunk) {body += chunk.toString();}
+                request.on('end', endStuff);
+                function endStuff(){
+                  body = parse(body);
+                  console.log(body);
+                  resolve(body);
+                }
               }
-            }
-            // Check if res has the correct format eg email, password and username in the object.
-            const schema = {
-              username: joi.string().required(),
-              email: joi.string().email().required(),
-              password: joi.string().min(5).required()
-            }
-            var result = joi.validate(body, schema);
-            if (result.error){
-              response.end(result.error.details[0].message);
-              return;
-            }
-            console.log(body.username, body.password, body.email);
-            try{
-              await database.insertUser(body.username, body.email, body.password);
-              response.writeHead(OK, { "Content-Type": "text/plain" });
-              response.end('User successfully created');
-            } catch(e){
-              response.writeHead(InvalidRequest, { "Content-Type": "text/plain" });
-              response.end(e.message);
-            }
-          }
-          // ----------------------------LOG-IN----------------------------------
-          else if (arraySplit[arraySplit.length - 1] == "login"){
-            console.log("Login functionality");
-            let promisedBody = new Promise(getBody);
-            let body = await promisedBody;
-            function getBody(resolve,reject){
-              let body = '';
-              request.on('data', add);
-              function add(chunk) {body += chunk.toString();}
-              request.on('end', endStuff);
-              function endStuff(){
-                body = parse(body);
-                console.log(body);
-                resolve(body);
+              // Check if res has the correct format eg email, password and username in the object.
+              const schema = {
+                username: joi.string().required(),
+                email: joi.string().email().required(),
+                password: joi.string().min(5).required()
               }
-            }
-            const schema = {
-              email: joi.string().email().required(),
-              password: joi.string().min(5).required()
-            }
-            var result = joi.validate(body, schema);
-            if (result.error){
-              response.end(result.error.details[0].message);
-              return;
-            }
-            console.log(body.email, body.password);
-            try{
-              let retrievedUser = await database.getUser(body.email);
-              console.log(retrievedUser);
-              if (retrievedUser[0] == null) {
-                response.writeHead(NotFound, { "Content-Type": "text/plain" });
-                response.end("Email does not exist. Please check your email or create an account.");
+              var result = joi.validate(body, schema);
+              if (result.error){
+                response.end(result.error.details[0].message);
+                return;
               }
-              if (retrievedUser[0].password == body.password){
-                console.log("Hello ", retrievedUser[0].username);
+              console.log(body.username, body.password, body.email);
+              try{
+                await database.insertUser(body.username, body.email, body.password);
                 response.writeHead(OK, { "Content-Type": "text/plain" });
-                response.end(retrievedUser[0].username);
+                response.end('User successfully created');
+              } catch(e){
+                response.writeHead(InvalidRequest, { "Content-Type": "text/plain" });
+                response.end(e.message);
               }
-              else {
-                console.log("Unable to authorise. Please try again.");
-                response.writeHead(401, { "Content-Type": "text/plain" });
-                response.end("Unable to authorise. Please try again.");
-              }
-            } catch(e){
-              response.writeHead(InvalidRequest, { "Content-Type": "text/plain" });
-              response.end(e.message);
             }
+            // ----------------------------LOG-IN----------------------------------
+            else if (arraySplit[arraySplit.length - 1] == "login"){
+              console.log("Login functionality");
+              let promisedBody = new Promise(getBody);
+              let body = await promisedBody;
+              function getBody(resolve,reject){
+                let body = '';
+                request.on('data', add);
+                function add(chunk) {body += chunk.toString();}
+                request.on('end', endStuff);
+                function endStuff(){
+                  body = parse(body);
+                  console.log(body);
+                  resolve(body);
+                }
+              }
+              const schema = {
+                email: joi.string().email().required(),
+                password: joi.string().min(5).required()
+              }
+              var result = joi.validate(body, schema);
+              if (result.error){
+                response.end(result.error.details[0].message);
+                return;
+              }
+              console.log(body.email, body.password);
+              try{
+                let retrievedUser = await database.getUser(body.email);
+                console.log(retrievedUser);
+                if (retrievedUser[0] == null) {
+                  response.writeHead(NotFound, { "Content-Type": "text/plain" });
+                  response.end("Email does not exist. Please check your email or create an account.");
+                }
+                if (retrievedUser[0].password == body.password){
+                  console.log("Hello ", retrievedUser[0].username);
+                  response.writeHead(OK, { "Content-Type": "text/plain" });
+                  response.end(retrievedUser[0].username);
+                }
+                else {
+                  console.log("Unable to authorise. Please try again.");
+                  response.writeHead(401, { "Content-Type": "text/plain" });
+                  response.end("Unable to authorise. Please try again.");
+                }
+              } catch(e){
+                response.writeHead(InvalidRequest, { "Content-Type": "text/plain" });
+                response.end(e.message);
+              }
+            }
+            // ---------------------------------------------------------------------
+            else {
+              let promisedBody = new Promise(getBody);
+              let body = await promisedBody;
+              function getBody(resolve,reject){
+              let body = '';
+              request.on('data', add);
+              function add(chunk) {body += chunk.toString();}
+              request.on('end', endStuff);
+              function endStuff(){
+                body = parse(body);
+                resolve(body);
+              }
+            }
+            console.log(body);
+            newPost(body);
+            response.writeHead(SeeOther,
+                               {location: '/search/?search=' + body.location})
+            response.end();
+            }
+
           }
-          // ---------------------------------------------------------------------
+          else if (contentType == 'multipart/form-data'){
+            handleMultipart(request, response);
+          }
           else {
-            let promisedBody = new Promise(getBody);
-            let body = await promisedBody;
-            function getBody(resolve,reject){
-            let body = '';
-            request.on('data', add);
-            function add(chunk) {body += chunk.toString();}
-            request.on('end', endStuff);
-            function endStuff(){
-              body = parse(body);
-              resolve(body);
-            }
+            console.log(request.headers);
+            fail(response, BadType, "Content type not supported");
           }
-          console.log(body);
-          newPost(body);
-          response.writeHead(SeeOther,
-                             {location: '/search/?search=' + body.location})
-          response.end();
+          break;
+
+        case "get":
+          // Make a dicision about what kind of url in coming in
+          if(keyWord == 'data'){
+            await handleDataRequest(request, response);
           }
+          else {
+            handleFileRequest(request, response, splitUrl);
+          }
+          break;
 
-        }
-        else if (contentType == 'multipart/form-data'){
-          handleMultipart(request, response);
-        }
-        else {
-          console.log(request.headers);
-          fail(response, BadType, "Content type not supported");
-        }
-        break;
+        case "put":
+          console.log(url);
+          let body = '';
+          request.on('data', add);
+          function add(chunk) {body += chunk.toString();}
+          request.on('end', endStuff);
+          function endStuff(){
+            fs.writeFile("newimage.jpg", body, function (err) {
+              if (err) throw err;
+              console.log('Saved!');
+            });
+            response.end('ok');
+          }
+          break;
 
-      case "get":
-        // Make a dicision about what kind of url in coming in
-        if(keyWord == 'data'){
-          await handleDataRequest(request, response);
-        }
-        else {
-          handleFileRequest(request, response, splitUrl);
-        }
-        break;
-
-      case "put":
-        console.log(url);
-        let body = '';
-        request.on('data', add);
-        function add(chunk) {body += chunk.toString();}
-        request.on('end', endStuff);
-        function endStuff(){
-          fs.writeFile("newimage.jpg", body, function (err) {
-            if (err) throw err;
-            console.log('Saved!');
-          });
-          response.end('ok');
-        }
-        break;
-
-      default:
-        fail(response, BadType, "Request method not supported by the server.");
+        default:
+          fail(response, BadType, "Request method not supported by the server.");
+      }
+    } catch (e) {
+      console.log(e);
+      fail(response, Error, "Couldn't solve the request.")
     }
-  } catch (e) {
-    console.log(e);
-    fail(response, Error, "Couldn't solve the request.")
   }
+
 }
 
 // Serve a request by delivering data from the database.
