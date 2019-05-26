@@ -129,7 +129,7 @@ async function handle(request, response) {
             }
             console.log(body.username, body.password, body.email);
             // Hash the password before saving it in the database
-            bcrypt.hash(body.password, 10, (err,hash) =>{
+            bcrypt.hash(body.password, 10, async(err,hash) =>{
               if(err){
                 response.writeHead(Error, { "Content-Type": "text/plain" });
                 return;
