@@ -2,23 +2,6 @@
 const sqlite = require("sqlite");
 var db;
 
-/*
-patata();
-
-async function patata(){
-  try {
-    await openDB("./db/db.sqlite");
-    //var posts = await GetPostsByDestination("Athens");
-    await newUser("EmilyC","Emily Clarke");
-    let posts = await db.all("SELECT * FROM profiles");
-    console.log(posts);
-  } catch (e) {
-    console.log(e);
-  }
-  await closeDB();
-}*/
-
-
 async function openDB(path) {
   db = await sqlite.open(path);
 }
