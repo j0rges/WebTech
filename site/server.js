@@ -84,7 +84,6 @@ function checkSite() {
 // Serve a request by delivering a file.
 async function handle(request, response) {
   let url = request.url.toLowerCase();
-  console.log(url);
   //validate the url:
   if(url.indexOf("..") > 0) fail(response, InvalidRequest, "invalid URL.");
   else if(url.indexOf("//") > 0) fail(response, InvalidRequest, "invalid URL.");
@@ -112,7 +111,6 @@ async function handle(request, response) {
                 request.on('end', endStuff);
                 function endStuff(){
                   body = parse(body);
-                  console.log(body);
                   resolve(body);
                 }
               }
@@ -127,9 +125,8 @@ async function handle(request, response) {
                 response.end(result.error.details[0].message);
                 return;
               }
-              console.log(body.username, body.password, body.email);
 
-              
+
               try{
                  // Hash the password before saving it in the database
                 let promiseHash = new Promise(gethash);
@@ -144,7 +141,6 @@ async function handle(request, response) {
                   }
                 }
                 let hash = await promiseHash;
-                console.log(body.username, body.email, hash);
                 await database.insertUser(body.username, body.email, hash);
                 response.writeHead(OK, { "Content-Type": "text/plain" });
                 response.end('User successfully created');
@@ -155,7 +151,6 @@ async function handle(request, response) {
             }
             // ----------------------------LOG-IN----------------------------------
               else if (arraySplit[arraySplit.length - 1] == "login"){
-                console.log("Login functionality");
                 let promisedBody = new Promise(getBody);
                 let body = await promisedBody;
                 function getBody(resolve,reject){
@@ -165,7 +160,6 @@ async function handle(request, response) {
                   request.on('end', endStuff);
                   function endStuff(){
                     body = parse(body);
-                    console.log(body);
                     resolve(body);
                   }
                 }
@@ -178,10 +172,8 @@ async function handle(request, response) {
                   response.end(result.error.details[0].message);
                   return;
                 }
-                console.log(body.email, body.password);
                 try{
                   let retrievedUser = await database.getUser(body.email);
-                  console.log(retrievedUser);
                   if (retrievedUser[0] == null) {
                     response.writeHead(NotFound, { "Content-Type": "text/plain" });
                     response.end("Email does not exist. Please check your email or create an account.");
@@ -189,7 +181,6 @@ async function handle(request, response) {
                   // Compare the hashed password from the database with the plain text password we got from the form
                   const match = await bcrypt.compare(body.password, retrievedUser[0].password);
                   if (match){
-                    console.log("Hello ", retrievedUser[0].username);
                     let name = retrievedUser[0].username;
                     // Write a cookie
                     response.writeHead(OK, {'Set-Cookie': 'username='+name, "Content-Type": "text/plain"})
@@ -220,13 +211,12 @@ async function handle(request, response) {
                   resolve(body);
                 }
               }
-              console.log(body);
               newPost(body);
               response.writeHead(SeeOther,
                                 {location: '/search/?search=' + body.location})
               response.end();
               }
-              
+
             }
             else if (contentType == 'multipart/form-data'){
               handleMultipart(request, response);
