@@ -154,11 +154,58 @@ async function handle(request, response) {
               }
             }
             // ----------------------------LOG-IN----------------------------------
-            else if (arraySplit[arraySplit.length - 1] == "login"){
-              console.log("Login functionality");
-              let promisedBody = new Promise(getBody);
-              let body = await promisedBody;
-              function getBody(resolve,reject){
+              else if (arraySplit[arraySplit.length - 1] == "login"){
+                console.log("Login functionality");
+                let promisedBody = new Promise(getBody);
+                let body = await promisedBody;
+                function getBody(resolve,reject){
+                  let body = '';
+                  request.on('data', add);
+                  function add(chunk) {body += chunk.toString();}
+                  request.on('end', endStuff);
+                  function endStuff(){
+                    body = parse(body);
+                    console.log(body);
+                    resolve(body);
+                  }
+                }
+                const schema = {
+                  email: joi.string().email().required(),
+                  password: joi.string().min(5).required()
+                }
+                var result = joi.validate(body, schema);
+                if (result.error){
+                  response.end(result.error.details[0].message);
+                  return;
+                }
+                console.log(body.email, body.password);
+                try{
+                  let retrievedUser = await database.getUser(body.email);
+                  console.log(retrievedUser);
+                  if (retrievedUser[0] == null) {
+                    response.writeHead(NotFound, { "Content-Type": "text/plain" });
+                    response.end("Email does not exist. Please check your email or create an account.");
+                  }
+                  if (retrievedUser[0].password == body.password){
+                    console.log("Hello ", retrievedUser[0].username);
+                    response.writeHead(OK, { "Content-Type": "text/plain" });
+                    response.end(retrievedUser[0].username);
+                  }
+                  else {
+                    console.log("Unable to authorise. Please try again.");
+                    response.writeHead(401, { "Content-Type": "text/plain" });
+                    response.end("Unable to authorise. Please try again.");
+                  }
+                } catch(e){
+                  response.writeHead(InvalidRequest, { "Content-Type": "text/plain" });
+                  response.end(e.message);
+                }
+              }
+              // ---------------------------------------------------------------------
+              else {
+                let promisedBody = new Promise(getBody);
+                let body = await promisedBody;
+                function getBody(resolve,reject){
                 let body = '';
                 request.on('data', add);
                 function add(chunk) {body += chunk.toString();}
@@ -174,7 +221,7 @@ async function handle(request, response) {
                                 {location: '/search/?search=' + body.location})
               response.end();
               }
-
+              
             }
             else if (contentType == 'multipart/form-data'){
               handleMultipart(request, response);
