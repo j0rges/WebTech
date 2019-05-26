@@ -186,7 +186,9 @@ async function handle(request, response) {
                     response.writeHead(NotFound, { "Content-Type": "text/plain" });
                     response.end("Email does not exist. Please check your email or create an account.");
                   }
-                  if (retrievedUser[0].password == body.password){
+                  // Compare the hashed password from the database with the plain text password we got from the form
+                  const match = await bcrypt.compare(body.password, retrievedUser[0].password);
+                  if (match){
                     console.log("Hello ", retrievedUser[0].username);
                     response.writeHead(OK, { "Content-Type": "text/plain" });
                     response.end(retrievedUser[0].username);
