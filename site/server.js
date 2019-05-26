@@ -190,7 +190,10 @@ async function handle(request, response) {
                   const match = await bcrypt.compare(body.password, retrievedUser[0].password);
                   if (match){
                     console.log("Hello ", retrievedUser[0].username);
-                    response.writeHead(OK, { "Content-Type": "text/plain" });
+                    let name = retrievedUser[0].username;
+                    // Write a cookie
+                    response.writeHead(OK, {'Set-Cookie': 'username='+name, "Content-Type": "text/plain"})
+                    // response.writeHead(OK, { "Content-Type": "text/plain" });
                     response.end(retrievedUser[0].username);
                   }
                   else {
